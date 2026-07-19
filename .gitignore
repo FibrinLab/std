@@ -1,0 +1,13 @@
+node_modules
+.next
+.env
+.env.local
+coverage
+playwright-report
+test-results
+*.tsbuildinfo
+supabase/.temp
+# Licensed stock source files (PSD/EPS) — not redistributable in a public repo.
+# The processed web crops live in public/botanicals/.
+assets/
+.DS_Store
