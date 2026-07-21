@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Countdown } from "@/components/countdown";
 import { SprigDivider } from "@/components/floral-art";
 import { FloralForm } from "@/components/floral-form";
 import { Reveal } from "@/components/reveal";
@@ -61,6 +62,14 @@ export default function HomePage() {
         </div>
         <p className="flo-italic" style={{ marginTop: 44 }}>{countdownLine}</p>
         <p className="flo-caps" style={{ marginTop: 10 }}>{wedding.signOff.replace("Love, ", "With love — ")}</p>
+      </Reveal>
+    </div>
+
+    <div className="flo-wrap">
+      <Reveal className="flo-section flo-timer-section">
+        <SprigDivider className="flo-sprig"/>
+        <p className="flo-caps flo-timer-eyebrow">Counting down to the big day</p>
+        <Countdown/>
       </Reveal>
     </div>
 

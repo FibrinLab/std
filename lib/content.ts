@@ -6,6 +6,7 @@ export const wedding = {
   hashtag: "#ForeverHisOyin27",
   dateDisplay: "02.04.2027",
   dateLong: "Friday 2 April 2027",
+  dateISO: "2027-04-02T00:00:00+01:00",
   venueAddress: "Lagos, Nigeria",
   contactEmail: "hello@example.com",
   signOff: "Love, Doyin & Akan",

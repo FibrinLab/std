@@ -5,6 +5,7 @@ test("guest replies, admin confirms, counter caps at 2", async ({ page }, testIn
   const email = `pw-${testInfo.project.name}@example.com`;
 
   await page.goto("/");
+  await expect(page.getByRole("timer")).toContainText("Days");
   await page.getByText("Can't wait to celebrate!").click();
   await expect(page.getByLabel("Can't wait to celebrate!")).toBeChecked();
   await page.getByLabel("Your name(s)").fill(partyName);

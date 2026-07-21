@@ -94,6 +94,16 @@ img { max-width:100%; }
 .flo-details { display:grid; gap:34px; }
 .flo-detail-heading { margin:0 0 8px; color:#a5793a; }
 .flo-details p { margin:0 auto; max-width:52ch; color:#5f5542; }
+.flo-timer-section { padding-bottom:10px; }
+.flo-timer-eyebrow { color:#a5793a; font-size:.8rem; margin-bottom:30px; }
+.flo-timer { display:flex; justify-content:center; align-items:stretch; gap:clamp(10px,2.5vw,22px); flex-wrap:wrap; }
+.flo-timer-tile { display:grid; gap:4px; align-content:start; min-width:clamp(88px,12vw,132px); padding:20px 10px 16px; border:1px solid var(--hairline); background:#fffdf7a6; }
+.flo-timer-tile strong { font-weight:500; font-size:clamp(2.4rem,6vw,3.6rem); line-height:1.05; display:block; overflow:hidden; }
+.flo-timer-digit { display:inline-block; animation:flo-tick .5s ease; }
+@keyframes flo-tick { from { opacity:0; translate:0 .35em; } to { opacity:1; translate:0 0; } }
+.flo-timer-label { font-size:.66rem; color:var(--sand); }
+.flo-timer-done { font-style:italic; font-size:clamp(1.8rem,5vw,2.6rem); margin:0; color:#8e3b4a; }
+@media (max-width:520px) { .flo-timer { display:grid; grid-template-columns:1fr 1fr; width:min(340px,100%); margin-inline:auto; } }
 .flo-footer { position:relative; padding:30px 20px 46px; display:grid; justify-items:center; }
 .flo-footer-leaves { width:min(680px,92%); height:auto; opacity:.62; pointer-events:none; -webkit-mask-image:radial-gradient(56% 52% at 50% 56%,#000 36%,transparent 92%); mask-image:radial-gradient(56% 52% at 50% 56%,#000 36%,transparent 92%); }
 .flo-footer .flo-caps { position:relative; margin-top:-34px; font-size:.78rem; color:#6d6350; }
