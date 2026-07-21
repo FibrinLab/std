@@ -4,8 +4,8 @@ import { useState } from "react";
 import { MAX_PARTY_SIZE, type ReplyStatus } from "./types";
 
 export const REPLY_OPTIONS: Array<{ value: ReplyStatus; label: string }> = [
-  { value: "celebrating", label: "Can't wait to celebrate!" },
-  { value: "from_afar", label: "Celebrating from afar" },
+  { value: "celebrating", label: "Yes - Can't wait to celebrate!" },
+  { value: "from_afar", label: "No - Celebrating from afar" },
 ];
 
 // All RSVP behavior lives here; each design supplies only its own markup.
