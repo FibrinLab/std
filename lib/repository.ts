@@ -1,10 +1,10 @@
-import { getDemoBroadcasts, getDemoReplies, saveDemoBroadcast, saveDemoReply } from "./demo-store";
+import { confirmDemoReply, getDemoBroadcasts, getDemoReplies, saveDemoBroadcast, saveDemoReply } from "./demo-store";
 import { isDemoMode } from "./env";
 import { createSupabaseAdminClient } from "./supabase/server";
 import type { Audience, Broadcast, SaveTheDateInput, SaveTheDateReply } from "./types";
 
 function mapReply(row: Record<string, unknown>): SaveTheDateReply {
-  return { id: String(row.id), fullName: String(row.full_name), email: String(row.email), status: row.status as SaveTheDateReply["status"], guestCount: Number(row.guest_count), guestNames: Array.isArray(row.guest_names) ? row.guest_names.map(String) : [], note: String(row.note ?? ""), createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
+  return { id: String(row.id), fullName: String(row.full_name), email: String(row.email), status: row.status as SaveTheDateReply["status"], approval: (row.approval as SaveTheDateReply["approval"]) ?? "pending", guestCount: Number(row.guest_count), guestNames: Array.isArray(row.guest_names) ? row.guest_names.map(String) : [], note: String(row.note ?? ""), createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
 }
 
 export async function saveReply(input: SaveTheDateInput): Promise<SaveTheDateReply> {
@@ -13,7 +13,7 @@ export async function saveReply(input: SaveTheDateInput): Promise<SaveTheDateRep
   if (!db) throw new Error("Database unavailable");
   const { data, error } = await db
     .from("save_the_date_rsvps")
-    .upsert({ full_name: input.fullName, email: input.email, status: input.status, guest_count: input.guestCount, guest_names: input.guestNames, note: input.note, updated_at: new Date().toISOString() }, { onConflict: "email" })
+    .upsert({ full_name: input.fullName, email: input.email, status: input.status, approval: "pending", guest_count: input.guestCount, guest_names: input.guestNames, note: input.note, updated_at: new Date().toISOString() }, { onConflict: "email" })
     .select()
     .single();
   if (error || !data) throw error ?? new Error("Reply not saved");
@@ -30,7 +30,16 @@ export async function getReplies(): Promise<SaveTheDateReply[]> {
 
 export async function getRecipients(audience: Audience): Promise<Array<{ email: string; fullName: string }>> {
   const replies = await getReplies();
-  return replies.filter((r) => audience === "all" || r.status === audience).map((r) => ({ email: r.email, fullName: r.fullName }));
+  return replies.filter((r) => audience === "all" || audience === "selected" || r.status === audience).map((r) => ({ email: r.email, fullName: r.fullName }));
+}
+
+export async function confirmReply(id: string): Promise<SaveTheDateReply | null> {
+  if (isDemoMode) return confirmDemoReply(id);
+  const db = createSupabaseAdminClient();
+  if (!db) throw new Error("Database unavailable");
+  const { data, error } = await db.from("save_the_date_rsvps").update({ approval: "confirmed", updated_at: new Date().toISOString() }).eq("id", id).select().single();
+  if (error || !data) return null;
+  return mapReply(data);
 }
 
 export async function saveBroadcast(input: { subject: string; body: string; audience: Audience; sentCount: number }): Promise<Broadcast> {

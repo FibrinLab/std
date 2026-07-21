@@ -150,6 +150,18 @@ img { max-width:100%; }
 .adm-chip { display:inline-flex; padding:5px 12px; border-radius:999px; font-size:.72rem; letter-spacing:.06em; }
 .adm-chip.celebrating { background:#8e3b4a14; color:#8e3b4a; border:1px solid #8e3b4a3d; }
 .adm-chip.from_afar { background:#8a7d5f14; color:#6d6350; border:1px solid #8a7d5f3d; }
+.adm-chip.pending { background:#a5793a14; color:#a5793a; border:1px solid #a5793a4d; }
+.adm-chip.confirmed { background:#5c704614; color:#5c7046; border:1px solid #5c70464d; }
+.adm-approval { display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.adm-confirm-wrap { display:inline-flex; align-items:center; gap:8px; }
+.adm-confirm-btn { font-family:var(--font-instrument),sans-serif; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; background:transparent; border:1px solid var(--ink); color:var(--ink); padding:5px 12px; border-radius:999px; cursor:pointer; transition:.2s; }
+.adm-confirm-btn:hover { background:var(--ink); color:var(--ivory); }
+.adm-confirm-btn:disabled { opacity:.5; cursor:default; }
+.adm-confirm-note { font-size:.74rem; color:#8a4a22; font-style:italic; }
+.adm-guestlist { display:grid; gap:8px; border:1px solid var(--hairline); padding:16px 18px; max-height:260px; overflow-y:auto; background:#fffdf780; }
+.adm-guest { display:flex; align-items:center; gap:10px; font-size:1.05rem; cursor:pointer; }
+.adm-guest input { accent-color:#8e3b4a; width:15px; height:15px; }
+.adm-guest em { font-style:normal; font-family:var(--font-instrument),sans-serif; font-size:.78rem; color:var(--sand); }
 .adm-empty { text-align:center; padding:44px 0 !important; color:var(--sand); font-style:italic; font-family:var(--font-cormorant),serif !important; font-size:1.05rem !important; }
 .adm-signout { background:none; border:0; padding:0 0 3px; font:inherit; letter-spacing:inherit; text-transform:inherit; color:var(--sand); cursor:pointer; border-bottom:1px solid transparent; transition:.2s; }
 .adm-signout:hover { color:var(--ink); border-color:var(--gold); }

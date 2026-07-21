@@ -4,7 +4,7 @@ import { ComposeUpdate } from "./compose-update";
 
 export const dynamic = "force-dynamic";
 
-const AUDIENCE_LABEL = { all: "Everyone", celebrating: "Celebrating", from_afar: "From afar" } as const;
+const AUDIENCE_LABEL = { all: "Everyone", celebrating: "Celebrating", from_afar: "From afar", selected: "Selected" } as const;
 const formatDate = (value: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lagos" }).format(new Date(value));
 
 export default async function UpdatesPage() {
@@ -20,7 +20,7 @@ export default async function UpdatesPage() {
       </div>
     </header>
     <section className="adm-panel adm-panel-left">
-      <ComposeUpdate counts={counts}/>
+      <ComposeUpdate counts={counts} guests={replies.map((r) => ({ email: r.email, fullName: r.fullName }))}/>
     </section>
     <section className="adm-panel" style={{ marginTop: 26 }}>
       <SprigDivider className="adm-sprig"/>

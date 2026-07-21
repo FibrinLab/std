@@ -2,6 +2,7 @@ import Image from "next/image";
 import { SprigDivider } from "@/components/floral-art";
 import { wedding } from "@/lib/content";
 import { getReplies } from "@/lib/repository";
+import { ConfirmButton } from "./confirm-button";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +11,12 @@ const formatDate = (value: string) => new Intl.DateTimeFormat("en-GB", { day: "n
 export default async function AdminPage() {
   const replies = await getReplies();
   const celebrating = replies.filter((r) => r.status === "celebrating");
+  const approved = celebrating.filter((r) => r.approval === "confirmed");
   const stats = [
     ["Replies", replies.length],
     ["Celebrating", celebrating.length],
-    ["From afar", replies.length - celebrating.length],
-    ["Confirmed heads", celebrating.reduce((n, r) => n + r.guestCount, 0)],
+    ["Approved", approved.length],
+    ["Confirmed heads", approved.reduce((n, r) => n + r.guestCount, 0)],
   ] as const;
   return <main className="adm-main">
     <Image className="adm-bloom" src="/botanicals/cut-dahlia-pink.png" alt="" width={1000} height={950} aria-hidden="true"/>
@@ -35,17 +37,20 @@ export default async function AdminPage() {
       <p className="adm-hint">Newest first — a guest replying again with the same email updates their row.</p>
       <div className="table-scroll">
         <table className="adm-table">
-          <thead><tr><th>Name</th><th>Email</th><th>Reply</th><th>Party size</th><th>Note</th><th>Last updated</th></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Reply</th><th>Approval</th><th>Party size</th><th>Note</th><th>Last updated</th></tr></thead>
           <tbody>
             {replies.map((reply) => <tr key={reply.id}>
               <td className="adm-name">{reply.fullName}{reply.guestNames.length > 0 && <span className="adm-with">with {reply.guestNames.join(", ")}</span>}</td>
               <td>{reply.email}</td>
               <td><span className={`adm-chip ${reply.status}`}>{reply.status === "celebrating" ? "Celebrating" : "From afar"}</span></td>
+              <td>{reply.status === "celebrating"
+                ? <span className="adm-approval"><span className={`adm-chip ${reply.approval}`}>{reply.approval === "confirmed" ? "Confirmed" : "Pending"}</span>{reply.approval === "pending" && <ConfirmButton replyId={reply.id}/>}</span>
+                : "—"}</td>
               <td>{reply.guestCount}</td>
               <td className="adm-note">{reply.note || "—"}</td>
               <td>{formatDate(reply.updatedAt)}</td>
             </tr>)}
-            {replies.length === 0 && <tr><td colSpan={6} className="adm-empty">No replies yet — share the site link with your guests.</td></tr>}
+            {replies.length === 0 && <tr><td colSpan={7} className="adm-empty">No replies yet — share the site link with your guests.</td></tr>}
           </tbody>
         </table>
       </div>

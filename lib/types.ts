@@ -1,7 +1,8 @@
-export const MAX_PARTY_SIZE = 8;
+export const MAX_PARTY_SIZE = 2;
 
 export type ReplyStatus = "celebrating" | "from_afar";
-export type Audience = "all" | ReplyStatus;
+export type Approval = "pending" | "confirmed";
+export type Audience = "all" | "selected" | ReplyStatus;
 
 export interface Broadcast {
   id: string;
@@ -17,6 +18,7 @@ export interface SaveTheDateReply {
   fullName: string;
   email: string;
   status: ReplyStatus;
+  approval: Approval;
   guestCount: number;
   guestNames: string[];
   note: string;

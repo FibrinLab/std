@@ -15,16 +15,14 @@ describe("saveTheDateSchema", () => {
   });
   it("rejects an invalid email", () => expect(saveTheDateSchema.safeParse({ ...valid, email: "bad" }).success).toBe(false));
   it("rejects an unknown status", () => expect(saveTheDateSchema.safeParse({ ...valid, status: "maybe" }).success).toBe(false));
-  it("bounds the party size at 8", () => {
+  it("bounds the party size at 2", () => {
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 0, guestNames: [] }).success).toBe(false);
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 9, guestNames: Array(8).fill("Guest") }).success).toBe(false);
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 8, guestNames: Array(7).fill("Guest") }).success).toBe(true);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 3, guestNames: ["Ada", "Tunde"] }).success).toBe(false);
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: "2" }).success).toBe(true);
   });
   it("rejects a blank name", () => expect(saveTheDateSchema.safeParse({ ...valid, fullName: "  " }).success).toBe(false));
   it("requires one guest name per additional guest", () => {
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 3 }).success).toBe(false);
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 3, guestNames: ["Ada", "Tunde"] }).success).toBe(true);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestNames: [] }).success).toBe(false);
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 1, guestNames: [] }).success).toBe(true);
     expect(saveTheDateSchema.safeParse({ ...valid, guestNames: [" "] }).success).toBe(false);
   });
