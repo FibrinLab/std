@@ -83,8 +83,8 @@ img { max-width:100%; }
 .flo-count-btn:focus-visible { outline:1px solid #a5793a; outline-offset:3px; }
 .flo-count output { font-size:1.4rem; min-width:2ch; text-align:center; }
 .flo-error { border:1px solid #c17a4f; color:#8a4a22; background:#f2b8ac33; padding:12px 18px; font-style:italic; margin:0; }
-.flo-button { font-family:var(--font-cormorant),serif; letter-spacing:.32em; text-indent:.32em; text-transform:uppercase; font-size:.95rem; padding:15px 42px; background:transparent; border:1px solid #33271c; color:#33271c; cursor:pointer; transition:.3s; }
-.flo-button:hover { background:#33271c; color:#f8f4ea; }
+.flo-button { font-family:var(--font-cormorant),serif; letter-spacing:.32em; text-indent:.32em; text-transform:uppercase; font-size:.95rem; padding:15px 42px; background:#33271c; border:1px solid #33271c; color:#f8f4ea; cursor:pointer; transition:.3s; }
+.flo-button:hover { background:transparent; color:#33271c; }
 .flo-button:disabled { opacity:.5; cursor:default; }
 .flo-button:focus-visible { outline:1px solid #a5793a; outline-offset:4px; }
 .flo-linklike { background:none; border:0; padding:0; font:inherit; font-style:italic; text-decoration:underline; text-underline-offset:4px; cursor:pointer; color:#7a6c52; }

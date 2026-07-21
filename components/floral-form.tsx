@@ -42,7 +42,7 @@ export function FloralForm() {
       <div className="flo-field flo-field-wide"><label className="flo-caps" htmlFor="flo-note">A note for us (optional)</label><textarea className="flo-input flo-textarea" id="flo-note" value={form.note} onChange={(e) => form.setNote(e.target.value)} rows={3} maxLength={500} placeholder="Anything you'd like us to know"/></div>
     </div>
     {form.error && <p className="flo-error" role="alert">{form.error}</p>}
-    <button className="flo-button" disabled={form.busy}>{form.busy ? "Sending…" : "Send our reply"}</button>
+    <button className="flo-button" disabled={form.busy}>{form.busy ? "Sending…" : "Send"}</button>
     <p className="flo-fine">Plans change? Reply again with the same email and we&rsquo;ll update it.</p>
   </form>;
 }

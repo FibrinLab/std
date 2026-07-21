@@ -14,7 +14,7 @@ test("guest replies, admin confirms, counter caps at 2", async ({ page }, testIn
   await expect(page.locator("output")).toHaveText("2");
   await expect(page.getByLabel("Guest 3’s name")).toHaveCount(0);
   await page.getByLabel("Guest 2’s name").fill("Chrome Guest");
-  await page.getByRole("button", { name: "Send our reply" }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByRole("heading", { name: /thank you, playwright/i })).toBeVisible();
 
   await page.goto("/admin");
