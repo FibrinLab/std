@@ -144,6 +144,7 @@ img { max-width:100%; }
 .adm-table th { font-family:var(--font-instrument),sans-serif; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sand); font-weight:500; padding:12px 14px; border-bottom:1px solid var(--hairline); }
 .adm-table td { font-family:var(--font-instrument),sans-serif; font-size:.88rem; color:var(--ink); padding:15px 14px; border-bottom:1px solid #e7dfcc; }
 .adm-name { font-family:var(--font-cormorant),serif; font-size:1.12rem; font-weight:600; }
+.adm-with { display:block; font-family:var(--font-instrument),sans-serif; font-size:.78rem; font-weight:400; color:var(--sand); margin-top:2px; }
 .adm-note { max-width:300px; color:var(--ink-soft); }
 .adm-chip { display:inline-flex; padding:5px 12px; border-radius:999px; font-size:.72rem; letter-spacing:.06em; }
 .adm-chip.celebrating { background:#8e3b4a14; color:#8e3b4a; border:1px solid #8e3b4a3d; }

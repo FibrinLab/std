@@ -38,7 +38,7 @@ export default async function AdminPage() {
           <thead><tr><th>Name</th><th>Email</th><th>Reply</th><th>Party size</th><th>Note</th><th>Last updated</th></tr></thead>
           <tbody>
             {replies.map((reply) => <tr key={reply.id}>
-              <td className="adm-name">{reply.fullName}</td>
+              <td className="adm-name">{reply.fullName}{reply.guestNames.length > 0 && <span className="adm-with">with {reply.guestNames.join(", ")}</span>}</td>
               <td>{reply.email}</td>
               <td><span className={`adm-chip ${reply.status}`}>{reply.status === "celebrating" ? "Celebrating" : "From afar"}</span></td>
               <td>{reply.guestCount}</td>

@@ -6,6 +6,7 @@ export interface SaveTheDateReply {
   email: string;
   status: ReplyStatus;
   guestCount: number;
+  guestNames: string[];
   note: string;
   createdAt: string;
   updatedAt: string;
@@ -16,5 +17,6 @@ export interface SaveTheDateInput {
   email: string;
   status: ReplyStatus;
   guestCount: number;
+  guestNames: string[];
   note: string;
 }

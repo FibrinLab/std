@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { saveTheDateSchema } from "@/lib/schemas";
 
-const valid = { fullName: "Jordan Bennett", email: "Jordan@Example.com", status: "celebrating", guestCount: 2, note: "See you there!" };
+const valid = { fullName: "Jordan Bennett", email: "Jordan@Example.com", status: "celebrating", guestCount: 2, guestNames: ["Taylor Bennett"], note: "See you there!" };
 
 describe("saveTheDateSchema", () => {
   it("accepts a complete reply and lowercases the email", () => {
@@ -16,9 +16,19 @@ describe("saveTheDateSchema", () => {
   it("rejects an invalid email", () => expect(saveTheDateSchema.safeParse({ ...valid, email: "bad" }).success).toBe(false));
   it("rejects an unknown status", () => expect(saveTheDateSchema.safeParse({ ...valid, status: "maybe" }).success).toBe(false));
   it("bounds the party size", () => {
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 0 }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 0, guestNames: [] }).success).toBe(false);
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 11 }).success).toBe(false);
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: "3" }).success).toBe(true);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: "2" }).success).toBe(true);
   });
   it("rejects a blank name", () => expect(saveTheDateSchema.safeParse({ ...valid, fullName: "  " }).success).toBe(false));
+  it("requires one guest name per additional guest", () => {
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 3 }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 3, guestNames: ["Ada", "Tunde"] }).success).toBe(true);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 1, guestNames: [] }).success).toBe(true);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestNames: [" "] }).success).toBe(false);
+  });
+  it("forbids guest names when celebrating from afar", () => {
+    expect(saveTheDateSchema.safeParse({ ...valid, status: "from_afar", guestCount: 1 }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, status: "from_afar", guestCount: 1, guestNames: [] }).success).toBe(true);
+  });
 });
