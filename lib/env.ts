@@ -6,7 +6,7 @@ const schema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().default("Akan & Doyin <onboarding@resend.dev>"),
+  EMAIL_FROM: z.string().default("Doyin & Akan <onboarding@resend.dev>"),
   ADMIN_EMAILS: z.string().default("planner@example.com"),
   ADMIN_ALERT_EMAIL: z.string().email().default("planner@example.com"),
   DEMO_MODE: z.enum(["true", "false"]).default("true"),

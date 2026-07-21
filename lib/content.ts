@@ -1,14 +1,14 @@
 // Every word on the public site lives here. Edit freely — no other file needs to change.
 
 export const wedding = {
-  coupleNames: "Akan & Doyin",
-  announcement: "Akan and Doyin are tying the knot!",
+  coupleNames: "Doyin & Akan",
+  announcement: "Doyin and Akan are tying the knot!",
   hashtag: "#ForeverHisOyin27",
   dateDisplay: "02.04.2027",
   dateLong: "Friday 2 April 2027",
   venueAddress: "Lagos, Nigeria",
   contactEmail: "hello@example.com",
-  signOff: "Love, Akan & Doyin",
+  signOff: "Love, Doyin & Akan",
 };
 
 export const detailSections = [

@@ -8,7 +8,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!(await isAdmin())) redirect("/admin/login");
   return <div className="adm-shell">
     <header className="adm-header">
-      <Link href="/admin" className="adm-brand">A&thinsp;&amp;&thinsp;D <span className="flo-caps">— Save the date</span></Link>
+      <Link href="/admin" className="adm-brand">D&thinsp;&amp;&thinsp;A <span className="flo-caps">— Save the date</span></Link>
       <nav className="adm-nav flo-caps"><Link href="/admin">Replies</Link><Link href="/">View site</Link></nav>
     </header>
     {children}
