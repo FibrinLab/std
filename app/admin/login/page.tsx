@@ -3,6 +3,8 @@ import { SprigDivider } from "@/components/floral-art";
 import { isAdmin } from "@/lib/security";
 import { LoginForm } from "./login-form";
 
+export const metadata = { title: "Admin sign in", robots: { index: false, follow: false } };
+
 export default async function LoginPage() {
   if (await isAdmin()) redirect("/admin");
   return <main className="adm-login">
@@ -10,7 +12,7 @@ export default async function LoginPage() {
       <SprigDivider className="adm-sprig"/>
       <p className="flo-caps adm-eyebrow">Private administration</p>
       <h1>Welcome back.</h1>
-      <p className="adm-sub">Enter an approved administrator email and we will send you a secure sign-in link.</p>
+      <p className="adm-sub">Enter the admin password to see replies and send updates.</p>
       <LoginForm/>
     </section>
   </main>;

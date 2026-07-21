@@ -1,4 +1,14 @@
 export type ReplyStatus = "celebrating" | "from_afar";
+export type Audience = "all" | ReplyStatus;
+
+export interface Broadcast {
+  id: string;
+  subject: string;
+  body: string;
+  audience: Audience;
+  sentCount: number;
+  createdAt: string;
+}
 
 export interface SaveTheDateReply {
   id: string;

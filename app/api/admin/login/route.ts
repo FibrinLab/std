@@ -1,5 +1,19 @@
 import { NextResponse } from "next/server";
-import { env, isDemoMode } from "@/lib/env";
-import { adminLoginSchema } from "@/lib/schemas";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-export async function POST(request:Request){if(isDemoMode)return NextResponse.json({message:"Demo mode does not require sign-in. Open /admin."});const parsed=adminLoginSchema.safeParse(await request.json().catch(()=>null));if(!parsed.success)return NextResponse.json({error:"Enter a valid email."},{status:400});const allowed=env.ADMIN_EMAILS.split(",").map((e)=>e.trim().toLowerCase());if(!allowed.includes(parsed.data.email))return NextResponse.json({message:"If that address is approved, a sign-in link is on its way."});const supabase=await createSupabaseServerClient();if(!supabase)return NextResponse.json({error:"Authentication is not configured."},{status:503});const {error}=await supabase.auth.signInWithOtp({email:parsed.data.email,options:{emailRedirectTo:`${env.NEXT_PUBLIC_SITE_URL}/auth/callback`}});if(error)return NextResponse.json({error:"We could not send the link."},{status:500});return NextResponse.json({message:"Check your inbox for a secure sign-in link."})}
+import { z } from "zod";
+import { env } from "@/lib/env";
+import { setAdminSession, verifyPassword } from "@/lib/security";
+
+const schema = z.object({ password: z.string().min(1).max(200) });
+
+const attempts = new Map<string, { count: number; reset: number }>();
+function allowed(ip: string) { const now = Date.now(); const item = attempts.get(ip); if (!item || item.reset < now) { attempts.set(ip, { count: 1, reset: now + 60_000 }); return true; } if (item.count >= 8) return false; item.count++; return true; }
+
+export async function POST(request: Request) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0] ?? "local";
+  if (!allowed(ip)) return NextResponse.json({ error: "Too many attempts. Please wait a minute." }, { status: 429 });
+  if (!env.ADMIN_PASSWORD) return NextResponse.json({ error: "Admin password is not configured. Set ADMIN_PASSWORD in the environment." }, { status: 503 });
+  const parsed = schema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success || !verifyPassword(parsed.data.password)) return NextResponse.json({ error: "That password is not right." }, { status: 401 });
+  await setAdminSession();
+  return NextResponse.json({ ok: true });
+}

@@ -18,10 +18,14 @@ All names, dates, venue text and the "details" card content live in `lib/content
 
 ## Production setup
 
-1. Create a Supabase project and run `supabase/migrations/0001_initial.sql`.
+1. Create a Supabase project and run every file in `supabase/migrations/` in order.
 2. Copy the project URL, anon key, and service-role key into your host's environment variables.
-3. Set `DEMO_MODE=false` and configure `ADMIN_EMAILS` (comma-separated admin sign-in addresses).
-4. Configure Resend credentials (`RESEND_API_KEY`, `EMAIL_FROM`, `ADMIN_ALERT_EMAIL`) for reply confirmation emails, and set `NEXT_PUBLIC_SITE_URL`.
+3. Set `DEMO_MODE=false` and choose an `ADMIN_PASSWORD` (min 8 characters) — it protects the whole admin, including sending updates. Without it, the admin is open in demo mode and locked in production.
+4. Configure Resend (`RESEND_API_KEY`, `EMAIL_FROM`, `ADMIN_ALERT_EMAIL`) and set `NEXT_PUBLIC_SITE_URL`. To send from your own domain, verify the domain in Resend first and use it in `EMAIL_FROM`.
+
+## Sending guest updates
+
+Admin → "Send update": pick an audience (everyone / celebrating / from afar), write a subject and message, confirm, and every matching guest receives a styled email via Resend. Past updates are listed with their audience and send count.
 
 ### Deploying to Netlify
 

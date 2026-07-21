@@ -18,6 +18,4 @@ export const saveTheDateSchema = z
     }
   });
 
-export const adminLoginSchema = z.object({ email: z.email().transform((v) => v.toLowerCase()) });
-
 export type SaveTheDateFormInput = z.infer<typeof saveTheDateSchema>;
