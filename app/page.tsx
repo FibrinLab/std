@@ -25,7 +25,7 @@ export default function HomePage() {
       <div className="flo-hero-text">
         <h1 className="flo-display"><span className="flo-d1">Save</span><span className="flo-d2">the</span><span className="flo-d1">Date</span></h1>
         <p className="flo-caps flo-names">{wedding.coupleNames}</p>
-        <p className="flo-caps">{wedding.dateLong}</p>
+        <p className="flo-caps flo-date">{wedding.dateLong.split(/(\d+)/).map((part, index) => /^\d+$/.test(part) ? <span className="flo-date-num" key={index}>{part}</span> : part)}</p>
         <p className="flo-caps">{wedding.venueAddress.replace(", ", " | ")}</p>
         <p className="flo-italic flo-follow">venue &amp; invitation to follow</p>
         <a className="flo-caps flo-scroll" href="#rsvp">Kindly reply below</a>

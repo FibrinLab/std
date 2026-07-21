@@ -46,6 +46,8 @@ img { max-width:100%; }
 .flo-caps { letter-spacing:.24em; text-transform:uppercase; font-weight:600; font-size:clamp(.92rem,2.7vw,1.14rem); margin:0; }
 .flo-keepcase { text-transform:none; }
 .flo-names { font-size:clamp(1.1rem,3.4vw,1.5rem); color:#8e3b4a; }
+.flo-date { display:flex; align-items:baseline; justify-content:center; gap:.35em; }
+.flo-date-num { font-size:1.75em; font-weight:600; line-height:1; letter-spacing:.08em; }
 .flo-italic { font-style:italic; font-size:1.22rem; letter-spacing:.06em; margin:0; }
 .flo-follow { margin-top:14px; color:#6d6350; }
 .flo-fine { font-size:.98rem; font-style:italic; color:#847a63; margin:0; }
