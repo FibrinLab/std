@@ -57,7 +57,7 @@ export default function HomePage() {
         <div className="flo-details">
           {detailSections.map((section) => <section key={section.heading}>
             <h3 className="flo-caps flo-detail-heading">{section.heading}</h3>
-            <p>{section.body}</p>
+            <p>{section.body}{section.link && <> <a className="flo-detail-link" href={section.link.href} target="_blank" rel="noreferrer">{section.link.label}</a></>}{section.after}</p>
           </section>)}
         </div>
         <p className="flo-italic" style={{ marginTop: 44 }}>{countdownLine}</p>

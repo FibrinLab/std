@@ -93,6 +93,8 @@ img { max-width:100%; }
 .flo-thanks-title { font-weight:500; font-style:italic; font-size:clamp(2rem,6vw,2.8rem); margin:4px 0 0; }
 .flo-details { display:grid; gap:34px; }
 .flo-detail-heading { margin:0 0 8px; color:#a5793a; }
+.flo-detail-link { color:#8e3b4a; text-decoration:underline; text-underline-offset:3px; white-space:nowrap; }
+.flo-detail-link:hover { color:#33271c; }
 .flo-details p { margin:0 auto; max-width:52ch; color:#5f5542; }
 .flo-timer-section { padding-bottom:10px; }
 .flo-timer-eyebrow { color:#a5793a; font-size:.8rem; margin-bottom:30px; }

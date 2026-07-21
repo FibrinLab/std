@@ -8,11 +8,11 @@ export const wedding = {
   dateLong: "Friday 2 April 2027",
   dateISO: "2027-04-02T00:00:00+01:00",
   venueAddress: "Lagos, Nigeria",
-  contactEmail: "hello@example.com",
+  whatsapp: { label: "+44 7392 576501", href: "https://wa.me/447392576501" },
   signOff: "Love, Doyin & Akan",
 };
 
-export const detailSections = [
+export const detailSections: Array<{ heading: string; body: string; link?: { label: string; href: string }; after?: string }> = [
   {
     heading: "Where to stay",
     body: "We are putting together a list of recommended hotels and guest rates close to the venue — it will arrive with the formal invitation.",
@@ -27,7 +27,9 @@ export const detailSections = [
   },
   {
     heading: "Questions?",
-    body: `Don't hesitate to drop us a line at ${wedding.contactEmail} — we're here to help!`,
+    body: "Don't hesitate to send us a WhatsApp message at",
+    link: wedding.whatsapp,
+    after: " — we're here to help!",
   },
 ];
 
