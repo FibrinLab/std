@@ -3,7 +3,7 @@
 export const wedding = {
   coupleNames: "Doyin & Akan",
   announcement: "Doyin and Akan are tying the knot!",
-  hashtag: "#ForeverHisOyin27",
+  hashtag: "#ForeverHisOyin20",
   dateDisplay: "02.04.2027",
   dateLong: "Friday 2 April 2027",
   venueAddress: "Lagos, Nigeria",
