@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ReplyStatus } from "./types";
+import { MAX_PARTY_SIZE, type ReplyStatus } from "./types";
 
 export const REPLY_OPTIONS: Array<{ value: ReplyStatus; label: string }> = [
   { value: "celebrating", label: "Can't wait to celebrate!" },
@@ -23,7 +23,7 @@ export function useSaveTheDateForm() {
   // The counter and the extra name boxes move together: party of N = lead guest + (N - 1) named guests.
   function increment() {
     setGuestCount((n) => {
-      const next = Math.min(10, n + 1);
+      const next = Math.min(MAX_PARTY_SIZE, n + 1);
       setGuestNames((names) => names.length < next - 1 ? [...names, ""] : names);
       return next;
     });

@@ -15,9 +15,10 @@ describe("saveTheDateSchema", () => {
   });
   it("rejects an invalid email", () => expect(saveTheDateSchema.safeParse({ ...valid, email: "bad" }).success).toBe(false));
   it("rejects an unknown status", () => expect(saveTheDateSchema.safeParse({ ...valid, status: "maybe" }).success).toBe(false));
-  it("bounds the party size", () => {
+  it("bounds the party size at 8", () => {
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 0, guestNames: [] }).success).toBe(false);
-    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 11 }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 9, guestNames: Array(8).fill("Guest") }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 8, guestNames: Array(7).fill("Guest") }).success).toBe(true);
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: "2" }).success).toBe(true);
   });
   it("rejects a blank name", () => expect(saveTheDateSchema.safeParse({ ...valid, fullName: "  " }).success).toBe(false));

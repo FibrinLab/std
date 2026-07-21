@@ -1,3 +1,5 @@
+export const MAX_PARTY_SIZE = 8;
+
 export type ReplyStatus = "celebrating" | "from_afar";
 export type Audience = "all" | ReplyStatus;
 
