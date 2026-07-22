@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("guest replies, admin confirms, counter caps at 2", async ({ page }, testInfo) => {
+test("guest replies for themselves and admin confirms", async ({ page }, testInfo) => {
   const partyName = `Playwright ${testInfo.project.name}`;
   const email = `pw-${testInfo.project.name}@example.com`;
 
@@ -8,19 +8,15 @@ test("guest replies, admin confirms, counter caps at 2", async ({ page }, testIn
   await expect(page.getByRole("timer")).toContainText("Days");
   await page.getByText("Yes - Can't wait to celebrate!").click();
   await expect(page.getByLabel("Yes - Can't wait to celebrate!")).toBeChecked();
-  await page.getByLabel("Your name(s)").fill(partyName);
+  await expect(page.getByText(/strictly by invitation/)).toBeVisible();
+  await expect(page.getByText("How many of you?")).toHaveCount(0);
+  await page.getByLabel("Your name", { exact: true }).fill(partyName);
   await page.getByLabel("Email").fill(email);
-  await page.getByRole("button", { name: "One more guest" }).click();
-  await page.getByRole("button", { name: "One more guest" }).click();
-  await expect(page.locator("output")).toHaveText("2");
-  await expect(page.getByLabel("Guest 3’s name")).toHaveCount(0);
-  await page.getByLabel("Guest 2’s name").fill("Chrome Guest");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByRole("heading", { name: /thank you, playwright/i })).toBeVisible();
 
   await page.goto("/admin");
   const row = page.getByRole("row", { name: new RegExp(partyName) });
-  await expect(row.getByText("with Chrome Guest")).toBeVisible();
   await expect(row.getByText("Pending")).toBeVisible();
   await row.getByRole("button", { name: "Confirm" }).click();
   await expect(row.getByText("Confirmed")).toBeVisible();

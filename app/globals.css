@@ -51,6 +51,7 @@ img { max-width:100%; }
 .flo-italic { font-style:italic; font-size:1.22rem; letter-spacing:.06em; margin:0; }
 .flo-follow { margin-top:14px; color:#6d6350; }
 .flo-fine { font-size:.98rem; font-style:italic; color:#847a63; margin:0; }
+.flo-invite-note { max-width:46ch; margin:-6px auto 0; }
 .flo-scroll { margin-top:32px; font-size:.82rem; border-bottom:1px solid #33271c59; padding-bottom:4px; transition:border-color .2s; }
 .flo-scroll:hover { border-color:#33271c; }
 .flo-section { position:relative; z-index:1; width:min(620px,calc(100% - 48px)); margin-inline:auto; padding:84px 0 30px; text-shadow:0 1px 14px #f8f4eae0; }
