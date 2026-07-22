@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { confirmDemoReply, getDemoReplies, saveDemoReply } from "@/lib/demo-store";
+import { confirmDemoReply, createDemoInvite, deleteDemoInvite, findDemoInviteByCode, getDemoReplies, listDemoInvites, saveDemoReply } from "@/lib/demo-store";
 
 describe("demo reply store", () => {
   it("adds a new reply as pending", () => {
@@ -18,6 +18,18 @@ describe("demo reply store", () => {
     expect(second.status).toBe("from_afar");
     expect(second.guestNames).toEqual([]);
     expect(getDemoReplies().length).toBe(count);
+  });
+  it("links replies to invites and protects answered invites from deletion", () => {
+    const invite = createDemoInvite("Ada Invitee", true);
+    expect(findDemoInviteByCode(invite.code)?.id).toBe(invite.id);
+    expect(findDemoInviteByCode("nope")).toBeNull();
+    saveDemoReply({ fullName: "Ada Invitee", email: "ada.invitee@example.com", status: "celebrating", guestCount: 2, guestNames: ["Tunde Guest"], note: "", inviteId: invite.id });
+    const listed = listDemoInvites().find((i) => i.id === invite.id);
+    expect(listed?.reply?.status).toBe("celebrating");
+    expect(listed?.reply?.guestCount).toBe(2);
+    expect(deleteDemoInvite(invite.id)).toBe(false);
+    const empty = createDemoInvite("Unanswered", false);
+    expect(deleteDemoInvite(empty.id)).toBe(true);
   });
   it("confirms a reply, and a changed reply goes back to pending", () => {
     const reply = saveDemoReply({ fullName: "Bisi Ade", email: "bisi@example.com", status: "celebrating", guestCount: 1, guestNames: [], note: "" });

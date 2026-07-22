@@ -13,8 +13,21 @@ export interface Broadcast {
   createdAt: string;
 }
 
+export interface Invite {
+  id: string;
+  code: string;
+  name: string;
+  plusOne: boolean;
+  createdAt: string;
+}
+
+export interface InviteWithReply extends Invite {
+  reply: { id: string; status: ReplyStatus; approval: Approval; guestCount: number } | null;
+}
+
 export interface SaveTheDateReply {
   id: string;
+  inviteId: string | null;
   fullName: string;
   email: string;
   status: ReplyStatus;
@@ -33,4 +46,5 @@ export interface SaveTheDateInput {
   guestCount: number;
   guestNames: string[];
   note: string;
+  inviteId?: string | null;
 }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { SprigDivider } from "@/components/floral-art";
 import { wedding } from "@/lib/content";
-import { getReplies } from "@/lib/repository";
+import { getReplies, listInvites } from "@/lib/repository";
 import { ConfirmButton } from "./confirm-button";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 const formatDate = (value: string) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lagos" }).format(new Date(value));
 
 export default async function AdminPage() {
-  const replies = await getReplies();
+  const [replies, invites] = await Promise.all([getReplies(), listInvites()]);
+  const inviteName = new Map(invites.map((i) => [i.id, i.name]));
   const celebrating = replies.filter((r) => r.status === "celebrating");
   const approved = celebrating.filter((r) => r.approval === "confirmed");
   const stats = [
@@ -40,7 +41,7 @@ export default async function AdminPage() {
           <thead><tr><th>Name</th><th>Email</th><th>Reply</th><th>Approval</th><th>Party size</th><th>Note</th><th>Last updated</th></tr></thead>
           <tbody>
             {replies.map((reply) => <tr key={reply.id}>
-              <td className="adm-name">{reply.fullName}{reply.guestNames.length > 0 && <span className="adm-with">with {reply.guestNames.join(", ")}</span>}</td>
+              <td className="adm-name">{reply.fullName}{reply.guestNames.length > 0 && <span className="adm-with">with {reply.guestNames.join(", ")}</span>}<span className="adm-with">{reply.inviteId ? `invited as ${inviteName.get(reply.inviteId) ?? "?"}` : <span className="adm-chip unmatched">Unmatched</span>}</span></td>
               <td>{reply.email}</td>
               <td><span className={`adm-chip ${reply.status}`}>{reply.status === "celebrating" ? "Celebrating" : "From afar"}</span></td>
               <td>{reply.status === "celebrating"

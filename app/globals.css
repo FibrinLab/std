@@ -167,6 +167,13 @@ img { max-width:100%; }
 .adm-chip.from_afar { background:#8a7d5f14; color:#6d6350; border:1px solid #8a7d5f3d; }
 .adm-chip.pending { background:#a5793a14; color:#a5793a; border:1px solid #a5793a4d; }
 .adm-chip.confirmed { background:#5c704614; color:#5c7046; border:1px solid #5c70464d; }
+.adm-chip.unmatched { background:#c17a4f14; color:#a05a2c; border:1px solid #c17a4f4d; }
+.adm-mini-btn { font-family:var(--font-instrument),sans-serif; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; background:transparent; border:1px solid #33271c66; color:var(--ink); padding:4px 10px; border-radius:999px; cursor:pointer; transition:.2s; }
+.adm-mini-btn:hover { background:var(--ink); color:var(--ivory); }
+.adm-mini-btn:disabled { opacity:.5; cursor:default; }
+.adm-mini-danger { border-color:#c17a4f66; color:#a05a2c; }
+.adm-mini-danger:hover { background:#a05a2c; border-color:#a05a2c; color:var(--ivory); }
+.adm-invite-link { font-family:var(--font-instrument),sans-serif; font-size:.8rem; color:var(--sand); white-space:nowrap; }
 .adm-approval { display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .adm-confirm-wrap { display:inline-flex; align-items:center; gap:8px; }
 .adm-confirm-btn { font-family:var(--font-instrument),sans-serif; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; background:transparent; border:1px solid var(--ink); color:var(--ink); padding:5px 12px; border-radius:999px; cursor:pointer; transition:.2s; }

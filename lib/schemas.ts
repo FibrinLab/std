@@ -11,6 +11,7 @@ export const saveTheDateSchema = z
     guestCount: z.coerce.number().int().min(1).max(MAX_PARTY_SIZE),
     guestNames: z.array(z.string().trim().min(1).max(120)).max(MAX_PARTY_SIZE - 1).default([]),
     note: z.string().trim().max(500).default(""),
+    inviteCode: z.string().trim().min(1).max(40).optional(),
   })
   .superRefine((data, ctx) => {
     const expected = data.status === "celebrating" ? data.guestCount - 1 : 0;

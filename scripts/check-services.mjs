@@ -28,6 +28,8 @@ if (!url || !key) {
     ["save_the_date_rsvps?select=guest_names&limit=1", "guest_names column", "0002_guest_names.sql"],
     ["broadcasts?select=id,audience&limit=1", "broadcasts table", "0003_broadcasts.sql"],
     ["save_the_date_rsvps?select=approval&limit=1", "approval column", "0005_approval_and_selected.sql"],
+    ["invites?select=id,code,plus_one&limit=1", "invites table", "0006_invites.sql"],
+    ["save_the_date_rsvps?select=invite_id&limit=1", "invite_id column", "0006_invites.sql"],
   ];
   for (const [path, label, migration] of checks) {
     try {

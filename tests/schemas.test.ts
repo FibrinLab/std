@@ -21,6 +21,10 @@ describe("saveTheDateSchema", () => {
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: "2" }).success).toBe(true);
   });
   it("rejects a blank name", () => expect(saveTheDateSchema.safeParse({ ...valid, fullName: "  " }).success).toBe(false));
+  it("accepts an optional invite code", () => {
+    expect(saveTheDateSchema.safeParse({ ...valid, inviteCode: "abcd234xyz" }).success).toBe(true);
+    expect(saveTheDateSchema.safeParse({ ...valid, inviteCode: "" }).success).toBe(false);
+  });
   it("requires one guest name per additional guest", () => {
     expect(saveTheDateSchema.safeParse({ ...valid, guestNames: [] }).success).toBe(false);
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: 1, guestNames: [] }).success).toBe(true);

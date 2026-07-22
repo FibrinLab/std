@@ -17,10 +17,42 @@ test("guest replies for themselves and admin confirms", async ({ page }, testInf
 
   await page.goto("/admin");
   const row = page.getByRole("row", { name: new RegExp(partyName) });
+  await expect(row.getByText("Unmatched")).toBeVisible();
   await expect(row.getByText("Pending")).toBeVisible();
   await row.getByRole("button", { name: "Confirm" }).click();
   await expect(row.getByText("Confirmed")).toBeVisible();
   await expect(row.getByRole("button", { name: "Confirm" })).toHaveCount(0);
+});
+
+test("personal invite link greets the guest and unlocks their plus-one", async ({ page }, testInfo) => {
+  const guest = `Ada ${testInfo.project.name}`;
+
+  await page.goto("/admin/guests");
+  await page.getByLabel("Guest name").fill(guest);
+  await page.getByText("Allow a plus-one").click();
+  await page.getByRole("button", { name: "Create invite" }).click();
+  const inviteRow = page.getByRole("row", { name: new RegExp(guest) });
+  await expect(inviteRow.getByText("Awaiting reply")).toBeVisible();
+  const linkText = await inviteRow.locator(".adm-invite-link").textContent();
+  const code = linkText?.match(/\/i\/([a-z2-9]+)/)?.[1];
+  expect(code).toBeTruthy();
+
+  await page.goto(`/i/${code}`);
+  await expect(page.getByText(`Kindly reply, Ada`)).toBeVisible();
+  await expect(page.getByLabel("Your name", { exact: true })).toHaveValue(guest);
+  await page.getByText("Yes - Can't wait to celebrate!").click();
+  await expect(page.getByText(/includes a plus-one/)).toBeVisible();
+  await page.getByLabel(/guest’s name/i).fill("Tunde Plus");
+  await page.getByLabel("Email").fill(`ada-${testInfo.project.name}@example.com`);
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(page.getByText(/one for Tunde Plus/)).toBeVisible();
+
+  await page.goto("/admin/guests");
+  await expect(page.getByRole("row", { name: new RegExp(guest) }).getByText("Replied · yes")).toBeVisible();
+  await page.goto("/admin");
+  const replyRow = page.getByRole("row", { name: new RegExp(guest) });
+  await expect(replyRow.getByText(`invited as ${guest}`)).toBeVisible();
+  await expect(replyRow.getByText("with Tunde Plus")).toBeVisible();
 });
 
 test("admin can compose an update to selected guests", async ({ page }, testInfo) => {

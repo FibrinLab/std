@@ -53,3 +53,14 @@ alter table public.save_the_date_rsvps add constraint save_the_date_rsvps_guest_
 alter table public.save_the_date_rsvps add column approval text not null default 'pending' check (approval in ('pending','confirmed'));
 alter table public.broadcasts drop constraint broadcasts_audience_check;
 alter table public.broadcasts add constraint broadcasts_audience_check check (audience in ('all','celebrating','from_afar','selected'));
+
+-- ── supabase/migrations/0006_invites.sql
+create table public.invites (
+  id uuid primary key default gen_random_uuid(),
+  code text not null unique,
+  name text not null,
+  plus_one boolean not null default false,
+  created_at timestamptz not null default now()
+);
+alter table public.invites enable row level security;
+alter table public.save_the_date_rsvps add column invite_id uuid references public.invites(id) on delete set null;
