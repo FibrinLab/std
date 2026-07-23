@@ -5,8 +5,9 @@ export const replyStatusSchema = z.enum(["celebrating", "from_afar"]);
 
 export const saveTheDateSchema = z
   .object({
-    fullName: z.string().trim().min(1).max(120),
+    fullName: z.string().trim().min(1).max(120).refine((v) => v.split(/\s+/).length >= 2, "Please give a first and last name."),
     email: z.email().max(254).transform((value) => value.toLowerCase()),
+    phone: z.string().trim().regex(/^\+?[0-9][0-9 ()-]{6,19}$/, "Please enter a valid phone number."),
     status: replyStatusSchema,
     guestCount: z.coerce.number().int().min(1).max(MAX_PARTY_SIZE),
     guestNames: z.array(z.string().trim().min(1).max(120)).max(MAX_PARTY_SIZE - 1).default([]),

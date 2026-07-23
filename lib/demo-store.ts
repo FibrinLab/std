@@ -5,8 +5,8 @@ import type { Audience, Broadcast, Invite, InviteWithReply, SaveTheDateInput, Sa
 // Kept on globalThis so every route bundle sees the same store (Next.js dev compiles routes separately).
 const globalStore = globalThis as unknown as { __demoReplies?: SaveTheDateReply[]; __demoBroadcasts?: Broadcast[]; __demoInvites?: Invite[] };
 const replies: SaveTheDateReply[] = (globalStore.__demoReplies ??= [
-  { id: "40000000-0000-4000-8000-000000000001", inviteId: null, fullName: "Jordan Bennett", email: "jordan@example.com", status: "celebrating", approval: "pending", guestCount: 2, guestNames: ["Taylor Bennett"], note: "Wouldn't miss it for the world!", createdAt: "2026-07-01T10:00:00.000Z", updatedAt: "2026-07-01T10:00:00.000Z" },
-  { id: "40000000-0000-4000-8000-000000000002", inviteId: null, fullName: "Amara Okafor", email: "amara@example.com", status: "from_afar", approval: "pending", guestCount: 1, guestNames: [], note: "Sending all our love from London.", createdAt: "2026-07-03T18:30:00.000Z", updatedAt: "2026-07-03T18:30:00.000Z" },
+  { id: "40000000-0000-4000-8000-000000000001", inviteId: null, fullName: "Jordan Bennett", email: "jordan@example.com", phone: "+234 801 234 5678", status: "celebrating", approval: "pending", guestCount: 2, guestNames: ["Taylor Bennett"], note: "Wouldn't miss it for the world!", createdAt: "2026-07-01T10:00:00.000Z", updatedAt: "2026-07-01T10:00:00.000Z" },
+  { id: "40000000-0000-4000-8000-000000000002", inviteId: null, fullName: "Amara Okafor", email: "amara@example.com", phone: "+44 7700 900123", status: "from_afar", approval: "pending", guestCount: 1, guestNames: [], note: "Sending all our love from London.", createdAt: "2026-07-03T18:30:00.000Z", updatedAt: "2026-07-03T18:30:00.000Z" },
 ]);
 
 export function getDemoReplies(): SaveTheDateReply[] {

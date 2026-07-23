@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { saveTheDateSchema } from "@/lib/schemas";
 
-const valid = { fullName: "Jordan Bennett", email: "Jordan@Example.com", status: "celebrating", guestCount: 2, guestNames: ["Taylor Bennett"], note: "See you there!" };
+const valid = { fullName: "Jordan Bennett", email: "Jordan@Example.com", phone: "+234 801 234 5678", status: "celebrating", guestCount: 2, guestNames: ["Taylor Bennett"], note: "See you there!" };
 
 describe("saveTheDateSchema", () => {
   it("accepts a complete reply and lowercases the email", () => {
@@ -21,6 +21,12 @@ describe("saveTheDateSchema", () => {
     expect(saveTheDateSchema.safeParse({ ...valid, guestCount: "2" }).success).toBe(true);
   });
   it("rejects a blank name", () => expect(saveTheDateSchema.safeParse({ ...valid, fullName: "  " }).success).toBe(false));
+  it("requires first and last name", () => expect(saveTheDateSchema.safeParse({ ...valid, fullName: "Jordan" }).success).toBe(false));
+  it("requires a plausible phone number", () => {
+    expect(saveTheDateSchema.safeParse({ ...valid, phone: "" }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, phone: "abc" }).success).toBe(false);
+    expect(saveTheDateSchema.safeParse({ ...valid, phone: "+44 7392 576501" }).success).toBe(true);
+  });
   it("accepts an optional invite code", () => {
     expect(saveTheDateSchema.safeParse({ ...valid, inviteCode: "abcd234xyz" }).success).toBe(true);
     expect(saveTheDateSchema.safeParse({ ...valid, inviteCode: "" }).success).toBe(false);

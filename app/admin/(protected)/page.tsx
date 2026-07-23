@@ -42,7 +42,7 @@ export default async function AdminPage() {
           <tbody>
             {replies.map((reply) => <tr key={reply.id}>
               <td className="adm-name">{reply.fullName}{reply.guestNames.length > 0 && <span className="adm-with">with {reply.guestNames.join(", ")}</span>}<span className="adm-with">{reply.inviteId ? `invited as ${inviteName.get(reply.inviteId) ?? "?"}` : <span className="adm-chip unmatched">Unmatched</span>}</span></td>
-              <td>{reply.email}</td>
+              <td>{reply.email}{reply.phone && <span className="adm-with">{reply.phone}</span>}</td>
               <td><span className={`adm-chip ${reply.status}`}>{reply.status === "celebrating" ? "Celebrating" : "From afar"}</span></td>
               <td>{reply.status === "celebrating"
                 ? <span className="adm-approval"><span className={`adm-chip ${reply.approval}`}>{reply.approval === "confirmed" ? "Confirmed" : "Pending"}</span>{reply.approval === "pending" && <ConfirmButton replyId={reply.id}/>}</span>

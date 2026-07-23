@@ -30,6 +30,7 @@ export interface SaveTheDateReply {
   inviteId: string | null;
   fullName: string;
   email: string;
+  phone: string;
   status: ReplyStatus;
   approval: Approval;
   guestCount: number;
@@ -42,6 +43,7 @@ export interface SaveTheDateReply {
 export interface SaveTheDateInput {
   fullName: string;
   email: string;
+  phone: string;
   status: ReplyStatus;
   guestCount: number;
   guestNames: string[];

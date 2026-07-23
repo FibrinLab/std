@@ -10,8 +10,10 @@ test("guest replies for themselves and admin confirms", async ({ page }, testInf
   await expect(page.getByLabel("Yes - Can't wait to celebrate!")).toBeChecked();
   await expect(page.getByText(/strictly by invitation/)).toBeVisible();
   await expect(page.getByText("How many of you?")).toHaveCount(0);
-  await page.getByLabel("Your name", { exact: true }).fill(partyName);
+  await page.getByLabel("First name").fill("Playwright");
+  await page.getByLabel("Last name").fill(testInfo.project.name);
   await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Phone number").fill("+44 7392 576501");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByRole("heading", { name: /thank you, playwright/i })).toBeVisible();
 
@@ -39,11 +41,13 @@ test("personal invite link greets the guest and unlocks their plus-one", async (
 
   await page.goto(`/i/${code}`);
   await expect(page.getByText(`Kindly reply, Ada`)).toBeVisible();
-  await expect(page.getByLabel("Your name", { exact: true })).toHaveValue(guest);
+  await expect(page.getByLabel("First name")).toHaveValue("Ada");
+  await expect(page.getByLabel("Last name")).toHaveValue(testInfo.project.name);
   await page.getByText("Yes - Can't wait to celebrate!").click();
   await expect(page.getByText(/includes a plus-one/)).toBeVisible();
   await page.getByLabel(/guest’s name/i).fill("Tunde Plus");
   await page.getByLabel("Email").fill(`ada-${testInfo.project.name}@example.com`);
+  await page.getByLabel("Phone number").fill("+234 801 234 5678");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByText(/one for Tunde Plus/)).toBeVisible();
 

@@ -5,7 +5,7 @@ import { createSupabaseAdminClient } from "./supabase/server";
 import type { Audience, Broadcast, Invite, InviteWithReply, SaveTheDateInput, SaveTheDateReply } from "./types";
 
 function mapReply(row: Record<string, unknown>): SaveTheDateReply {
-  return { id: String(row.id), inviteId: row.invite_id ? String(row.invite_id) : null, fullName: String(row.full_name), email: String(row.email), status: row.status as SaveTheDateReply["status"], approval: (row.approval as SaveTheDateReply["approval"]) ?? "pending", guestCount: Number(row.guest_count), guestNames: Array.isArray(row.guest_names) ? row.guest_names.map(String) : [], note: String(row.note ?? ""), createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
+  return { id: String(row.id), inviteId: row.invite_id ? String(row.invite_id) : null, fullName: String(row.full_name), email: String(row.email), phone: String(row.phone ?? ""), status: row.status as SaveTheDateReply["status"], approval: (row.approval as SaveTheDateReply["approval"]) ?? "pending", guestCount: Number(row.guest_count), guestNames: Array.isArray(row.guest_names) ? row.guest_names.map(String) : [], note: String(row.note ?? ""), createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
 }
 
 export async function saveReply(input: SaveTheDateInput): Promise<SaveTheDateReply> {
@@ -14,7 +14,7 @@ export async function saveReply(input: SaveTheDateInput): Promise<SaveTheDateRep
   if (!db) throw new Error("Database unavailable");
   const { data, error } = await db
     .from("save_the_date_rsvps")
-    .upsert({ full_name: input.fullName, email: input.email, status: input.status, approval: "pending", guest_count: input.guestCount, guest_names: input.guestNames, note: input.note, ...(input.inviteId ? { invite_id: input.inviteId } : {}), updated_at: new Date().toISOString() }, { onConflict: "email" })
+    .upsert({ full_name: input.fullName, email: input.email, phone: input.phone, status: input.status, approval: "pending", guest_count: input.guestCount, guest_names: input.guestNames, note: input.note, ...(input.inviteId ? { invite_id: input.inviteId } : {}), updated_at: new Date().toISOString() }, { onConflict: "email" })
     .select()
     .single();
   if (error || !data) throw error ?? new Error("Reply not saved");

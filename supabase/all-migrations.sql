@@ -64,3 +64,6 @@ create table public.invites (
 );
 alter table public.invites enable row level security;
 alter table public.save_the_date_rsvps add column invite_id uuid references public.invites(id) on delete set null;
+
+-- ── supabase/migrations/0007_phone.sql
+alter table public.save_the_date_rsvps add column phone text not null default '';
