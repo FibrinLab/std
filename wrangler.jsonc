@@ -9,5 +9,17 @@
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "save-the-date" }],
   "images": { "binding": "IMAGES" },
+  // Public, non-sensitive settings only — this file is in a public repo.
+  // Secrets (ADMIN_PASSWORD, RESEND_API_KEY, SUPABASE_SERVICE_ROLE_KEY) are set as encrypted
+  // Secrets in the Cloudflare dashboard, or with `npx wrangler secret put NAME`; deploys never touch them.
+  "vars": {
+    "DEMO_MODE": "false",
+    "NEXT_PUBLIC_SITE_URL": "https://doyinandakan.com",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://orishnnbfivtfvqhvxcf.supabase.co",
+    "EMAIL_FROM": "Doyin & Akan <rsvp@doyinandakan.com>",
+    "ADMIN_ALERT_EMAIL": "planner@doyinandakan.com"
+  },
+  // Keep anything else set in the dashboard instead of wiping it on each deploy.
+  "keep_vars": true,
   "observability": { "enabled": true }
 }
