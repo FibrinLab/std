@@ -73,3 +73,47 @@ test("admin can compose an update to selected guests", async ({ page }, testInfo
   await expect(page.getByText(/Recorded — demo mode|Sent to 1 guest/)).toBeVisible();
   await expect(page.getByRole("cell", { name: `Venue news ${testInfo.project.name}` }).first()).toBeVisible();
 });
+
+test("where to stay compares the hotels and opens their details", async ({ page }) => {
+  await page.goto("/");
+  const stay = page.locator("#stay");
+  await expect(stay.getByRole("heading", { name: "Where to Stay" })).toBeVisible();
+  await expect(stay.getByRole("heading", { name: "Four Points by Sheraton Lagos" })).toBeVisible();
+  for (const name of ["Hotelinn Oniru", "The Art Hotel Lagos", "Eko Hotels & Suites"]) await expect(stay.getByRole("heading", { name })).toBeAttached();
+  await expect(stay.getByText(/Preferential wedding rates are currently being arranged/)).toHaveCount(1);
+  await expect(page.getByText("Book Doyin & Akan Wedding Rate")).toHaveCount(0);
+  for (const link of await stay.locator('a[href^="http"]').all()) await expect(link).toHaveAttribute("target", "_blank");
+
+  await stay.getByRole("article").filter({ hasText: "Hotelinn Oniru" }).getByRole("button", { name: "View Hotel Details" }).click();
+  const dialog = page.getByRole("dialog", { name: "Hotelinn Oniru" });
+  await expect(dialog.getByText("Room categories")).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /Open in Google Maps/ })).toHaveAttribute("target", "_blank");
+  await dialog.getByRole("button", { name: "Close hotel details" }).click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test("flights page pre-fills the suggested trip and hands the search to Skyscanner", async ({ page }) => {
+  // Record window.open instead of really visiting the flight site.
+  await page.addInitScript(() => { window.open = (url) => { (window as unknown as { opened: string }).opened = String(url); return null; }; });
+  await page.goto("/");
+  await page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "Flights" }).click();
+  await expect(page.getByRole("heading", { name: "Flights to Lagos" })).toBeVisible();
+  await expect(page.getByText("Murtala Muhammed International Airport", { exact: false }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /View airport location/ })).toHaveAttribute("target", "_blank");
+
+  await expect(page.getByLabel("Departure date")).toHaveValue("2027-03-30");
+  await expect(page.getByLabel("Return date")).toHaveValue("2027-04-05");
+  await expect(page.getByLabel("Cabin class")).toHaveValue("economy");
+  await expect(page.locator('output[aria-label="Adults"]')).toHaveText("1");
+
+  await page.getByRole("button", { name: /Search Flights/ }).click();
+  await expect(page.locator(".flo-error")).toContainText("flying from");
+
+  await page.getByLabel("Flying from").fill("lond");
+  await page.getByRole("option", { name: /All airports/ }).click();
+  await page.getByRole("button", { name: /Search Flights/ }).click();
+  expect(await page.evaluate(() => (window as unknown as { opened: string }).opened)).toContain("skyscanner.net/transport/flights/lond/los/270330/270405/");
+
+  await page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "RSVP" }).click();
+  await expect(page).toHaveURL(/\/#rsvp$/);
+});

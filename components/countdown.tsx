@@ -23,8 +23,8 @@ export function Countdown() {
     : [["Days", parts.days], ["Hours", parts.hours], ["Minutes", parts.minutes], ["Seconds", parts.seconds]];
 
   return <div className="flo-timer" role="timer" aria-label="Countdown to the wedding">
-    {units.map(([label, value]) => <div className="flo-timer-tile" key={label}>
-      <strong><span className="flo-timer-digit" key={value ?? "pending"}>{value ?? "—"}</span></strong>
+    {units.map(([label, value]) => <div className="flo-timer-unit" key={label}>
+      <strong>{value ?? "—"}</strong>
       <span className="flo-caps flo-timer-label">{label}</span>
     </div>)}
   </div>;

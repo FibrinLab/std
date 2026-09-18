@@ -2,17 +2,21 @@ import Image from "next/image";
 import { Countdown } from "@/components/countdown";
 import { SprigDivider } from "@/components/floral-art";
 import { FloralForm } from "@/components/floral-form";
+import { HotelStay } from "@/components/hotel-stay";
 import type { FormInvite } from "@/lib/use-save-the-date-form";
 import { Reveal } from "@/components/reveal";
-import { countdownLine, detailSections, wedding } from "@/lib/content";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteNav } from "@/components/site-nav";
+import { countdownLine, detailSections, stay, wedding } from "@/lib/content";
 
-// Positioning, size, and drift animation live in CSS (per-class, with mobile overrides).
+// Positioning, size, and gentle sway live in CSS, with mobile overrides.
 function Bloom({ src, width, height, className }: { src: string; width: number; height: number; className: string }) {
   return <Image className={`flo-bloom ${className}`} src={src} alt="" width={width} height={height} aria-hidden="true"/>;
 }
 
 export function SaveTheDatePage({ invite }: { invite?: FormInvite }) {
   return <main className="flo-page">
+    <SiteNav home/>
     <section className="flo-hero">
       <span className="flo-aura flo-aura-coral" aria-hidden="true"/>
       <span className="flo-aura flo-aura-gold" aria-hidden="true"/>
@@ -29,7 +33,7 @@ export function SaveTheDatePage({ invite }: { invite?: FormInvite }) {
         <p className="flo-caps flo-date">{wedding.dateLong.split(/(\d+)/).map((part, index) => /^\d+$/.test(part) ? <span className="flo-date-num" key={index}>{part}</span> : part)}</p>
         <p className="flo-caps">{wedding.venueAddress.replace(", ", " | ")}</p>
         <p className="flo-italic flo-follow">venue &amp; invitation to follow</p>
-        <a className="flo-caps flo-scroll" href="#rsvp">Kindly reply below</a>
+        <a className="flo-caps flo-scroll" href="#rsvp">RSVP</a>
       </div>
     </section>
 
@@ -47,18 +51,27 @@ export function SaveTheDatePage({ invite }: { invite?: FormInvite }) {
     </div>
 
     <div className="flo-wrap">
+      <span className="flo-aura flo-aura-gold flo-aura-stay" aria-hidden="true"/>
+      <Reveal id="stay" className="flo-section flo-section-wide">
+        <SprigDivider className="flo-sprig"/>
+        <h2 className="flo-heading">{stay.heading}</h2>
+        <HotelStay/>
+      </Reveal>
+    </div>
+
+    <div className="flo-wrap">
       <span className="flo-aura flo-aura-plum" aria-hidden="true"/>
       <Bloom src="/botanicals/cut-magnolia.png" width={1250} height={1375} className="flo-blur flo-b-detailsglow"/>
       <Bloom src="/botanicals/cut-magnolia.png" width={1250} height={1375} className="flo-b-magnolia"/>
       <Bloom src="/botanicals/cut-dahlia-pink.png" width={1000} height={950} className="flo-b-dahlia"/>
       <Bloom src="/botanicals/cut-peony-burgundy.png" width={1100} height={1075} className="flo-b-details-peony"/>
-      <Reveal className="flo-section">
+      <Reveal id="details" className="flo-section">
         <SprigDivider className="flo-sprig"/>
         <h2 className="flo-heading">The Details</h2>
         <div className="flo-details">
           {detailSections.map((section) => <section key={section.heading}>
             <h3 className="flo-caps flo-detail-heading">{section.heading}</h3>
-            <p>{section.body}{section.link && <> <a className="flo-detail-link" href={section.link.href} target="_blank" rel="noreferrer">{section.link.label}</a></>}{section.after}</p>
+            <p>{section.body}{section.link && <> <a className="flo-detail-link" href={section.link.href} {...(section.link.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>{section.link.label}</a></>}{section.after}</p>
           </section>)}
         </div>
         <p className="flo-italic" style={{ marginTop: 44 }}>{countdownLine}</p>
@@ -74,9 +87,6 @@ export function SaveTheDatePage({ invite }: { invite?: FormInvite }) {
       </Reveal>
     </div>
 
-    <footer className="flo-footer">
-      <Image className="flo-footer-leaves" src="/botanicals/cut-leaves.png" alt="" width={1500} height={967} aria-hidden="true"/>
-      <span className="flo-caps">{wedding.dateDisplay.replaceAll(".", " · ")} — {wedding.venueAddress} — <span className="flo-keepcase">{wedding.hashtag}</span> 🐝</span>
-    </footer>
+    <SiteFooter/>
   </main>;
 }
