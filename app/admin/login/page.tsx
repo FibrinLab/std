@@ -3,6 +3,9 @@ import { SprigDivider } from "@/components/floral-art";
 import { isAdmin } from "@/lib/security";
 import { LoginForm } from "./login-form";
 
+// Always render per request. Without this, a build with no ADMIN_PASSWORD set (e.g. CI or Cloudflare's
+// builder) never reaches cookies(), so Next prerenders the page as static and it fails with a 500 when served.
+export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin sign in", robots: { index: false, follow: false } };
 
 export default async function LoginPage() {

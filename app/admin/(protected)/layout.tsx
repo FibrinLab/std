@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { SignOut } from "@/components/sign-out";
 import { isAdmin } from "@/lib/security";
 
+// Admin pages depend on the session cookie and live data — never prerender them at build time.
+export const dynamic = "force-dynamic";
 export const metadata = { title: "Wedding administration", robots: { index: false, follow: false } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
