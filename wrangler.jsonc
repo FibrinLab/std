@@ -1,0 +1,13 @@
+// Cloudflare Workers config (OpenNext adapter). The Worker name must match the project name in the
+// Cloudflare dashboard — and the self-reference below must match it too, or deploys fail with error 10143.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "save-the-date",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "save-the-date" }],
+  "images": { "binding": "IMAGES" },
+  "observability": { "enabled": true }
+}

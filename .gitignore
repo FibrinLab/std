@@ -11,3 +11,7 @@ supabase/.temp
 # The processed web crops live in public/botanicals/.
 assets/
 .DS_Store
+# Cloudflare (OpenNext) build output
+.open-next
+.wrangler
+.dev.vars

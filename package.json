@@ -12,27 +12,33 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check:services": "node scripts/check-services.mjs"
+    "check:services": "node scripts/check-services.mjs",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@react-email/components": "^1.0.6",
     "@supabase/supabase-js": "^2.99.1",
-    "next": "16.2.10",
+    "next": "16.3.5",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "resend": "^6.9.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.6",
     "@playwright/test": "^1.58.2",
     "@types/node": "^24.10.13",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.0.18",
+    "esbuild": "^0.28.2",
     "eslint": "^9.39.2",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.3.5",
     "jsdom": "^27.4.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "wrangler": "^4.135.0"
   }
 }
