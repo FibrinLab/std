@@ -14,7 +14,7 @@
   // Secrets in the Cloudflare dashboard, or with `npx wrangler secret put NAME`; deploys never touch them.
   "vars": {
     "DEMO_MODE": "false",
-    "NEXT_PUBLIC_SITE_URL": "https://doyinandakan.com",
+    "NEXT_PUBLIC_SITE_URL": "https://www.doyinandakan.com",
     "NEXT_PUBLIC_SUPABASE_URL": "https://orishnnbfivtfvqhvxcf.supabase.co",
     "EMAIL_FROM": "Doyin & Akan <rsvp@doyinandakan.com>",
     "ADMIN_ALERT_EMAIL": "planner@doyinandakan.com"

@@ -283,3 +283,58 @@ export const flights = {
     ],
   },
 };
+
+// ---------- Itinerary (emailed from Admin → Itinerary) ----------
+// DRAFT SCHEDULE — the times, places and dress code below are placeholders in the right shape.
+// Replace them with the real running order before sending; the admin page shows a live preview.
+// Each day lists its events in order; leave `place` or `note` out when there is nothing to add.
+
+export type ItineraryEvent = { time: string; title: string; place?: string; note?: string };
+export type ItineraryDay = { date: string; title: string; description?: string; events: ItineraryEvent[] };
+
+export const itinerary = {
+  subject: "Your itinerary for Doyin & Akan's wedding",
+  eyebrow: "The itinerary",
+  title: "A guide to our wedding weekend",
+  intro: "We are so happy you are joining us in Lagos. Here is everything you need to know about the days around the wedding — where to be, when, and what to wear.",
+  days: [
+    {
+      date: "Thursday 1 April 2027",
+      title: "Welcome to Lagos",
+      description: "A relaxed evening to say hello before the big day.",
+      events: [
+        { time: "7:00 pm", title: "Welcome drinks", place: "Cloud Terrace, The Art Hotel, Oniru", note: "Come as you are — smart casual. Drop in any time until 10 pm." },
+      ],
+    },
+    {
+      date: "Friday 2 April 2027",
+      title: "The wedding day",
+      description: "The main event. Please arrive in good time — Lagos traffic has a mind of its own.",
+      events: [
+        { time: "11:00 am", title: "Guests arrive", place: "The Five Palm Event Center, Oniru", note: "Please be seated by 11:45 am." },
+        { time: "12:00 pm", title: "The ceremony", place: "The Five Palm Event Center" },
+        { time: "1:30 pm", title: "Cocktails & photographs", note: "Light bites and drinks while we take pictures with family." },
+        { time: "3:00 pm", title: "Reception, dinner & dancing", place: "The Five Palm Event Center", note: "Speeches, dinner, the first dance and a very long party." },
+        { time: "10:00 pm", title: "Carriages", note: "Taxis and ride-hailing pick up at the main entrance." },
+      ],
+    },
+    {
+      date: "Saturday 3 April 2027",
+      title: "The morning after",
+      description: "Nothing formal — just a chance to recover together.",
+      events: [
+        { time: "11:00 am", title: "Farewell brunch", place: "Venue to be confirmed", note: "Optional, and very relaxed. Families and friends welcome." },
+      ],
+    },
+  ] as ItineraryDay[],
+  dressCode: {
+    heading: "Dress code",
+    body: "Traditional attire or formal wear for the wedding day — think aso ebi, agbada, evening dresses and suits. Colours of the day will be shared with the formal invitation.",
+  },
+  goodToKnow: [
+    { title: "Getting around", body: "Victoria Island and Oniru are close together, but allow at least 30 minutes for any journey on the day. Your hotel can arrange a car." },
+    { title: "Gifts", body: "Your presence is truly the greatest gift. Details for those who would like to contribute will follow with the formal invitation." },
+    { title: "Questions", body: "Message us on WhatsApp at any time — we are happy to help with anything at all." },
+  ],
+  closing: "We cannot wait to see you there.",
+};

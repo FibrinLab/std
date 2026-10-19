@@ -406,6 +406,19 @@ img { max-width:100%; }
 .adm-confirm { display:flex; align-items:center; gap:18px; flex-wrap:wrap; border:1px solid var(--gold); background:#a5793a14; padding:14px 18px; font-style:italic; }
 .adm-confirm .flo-button { padding:11px 26px; font-size:.8rem; }
 .adm-sent { margin:0; color:#4c6338; font-style:italic; border:1px solid #7c8c5d66; background:#8a9a6b1a; padding:12px 18px; }
+.adm-itinerary { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:36px; align-items:start; }
+.adm-itinerary .adm-compose { margin:8px 0 24px; max-width:none; }
+.adm-actions { display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+.adm-actions .flo-linklike:disabled { opacity:.5; cursor:default; }
+.adm-optional { font-style:italic; text-transform:none; letter-spacing:0; color:var(--sand); }
+.adm-preview { position:sticky; top:20px; }
+.adm-preview-frame { display:block; width:100%; height:min(78vh,900px); border:1px solid var(--hairline); background:var(--ivory); }
+.adm-days { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:26px 32px; text-align:left; margin:14px 0 6px; }
+.adm-day-date { font-size:.72rem; color:var(--burgundy); margin:0 0 4px; }
+.adm-day-title { font-size:1.5rem; font-weight:500; font-style:italic; margin:0 0 10px; }
+.adm-day-events { list-style:none; margin:0; padding:0; display:grid; gap:7px; font-size:1.02rem; }
+.adm-day-events strong { font-family:var(--font-instrument),sans-serif; font-weight:500; font-size:.74rem; letter-spacing:.08em; color:var(--burgundy); margin-right:6px; }
+.adm-day-events em { color:var(--sand); }
 .adm-login { min-height:100vh; display:grid; place-items:center; padding:40px 20px; background-color:var(--ivory); background-image:radial-gradient(700px 520px at 50% -60px,#f2b8ac3d,transparent 72%),var(--grain); text-align:center; }
 .adm-login-panel { width:min(460px,100%); border:1px solid var(--hairline); background:#fffdf7b8; padding:44px 38px; }
 .adm-login-panel h1 { font-size:2.6rem; font-weight:500; margin:8px 0 10px; }
@@ -416,6 +429,9 @@ img { max-width:100%; }
   .adm-title { flex-direction:column; align-items:flex-start; }
   .adm-bloom { display:none; }
   .adm-panel { padding:24px 16px 4px; }
+  .adm-itinerary { grid-template-columns:1fr; }
+  .adm-preview { position:static; }
+  .adm-preview-frame { height:70vh; }
 }
 @media (prefers-reduced-motion:reduce) {
   *,*:before,*:after { scroll-behavior:auto!important; transition-duration:.01ms!important; animation-duration:.01ms!important; }

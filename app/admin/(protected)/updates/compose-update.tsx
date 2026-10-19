@@ -3,17 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Audience } from "@/lib/types";
+import { AudiencePicker, recipientCount, type AudienceCounts, type Guest } from "../audience-picker";
 
-const AUDIENCES: Array<{ value: Audience; label: string }> = [
-  { value: "all", label: "Everyone" },
-  { value: "celebrating", label: "Celebrating" },
-  { value: "from_afar", label: "From afar" },
-  { value: "selected", label: "Selected guests" },
-];
-
-type Guest = { email: string; fullName: string };
-
-export function ComposeUpdate({ counts, guests }: { counts: Record<"all" | "celebrating" | "from_afar", number>; guests: Guest[] }) {
+export function ComposeUpdate({ counts, guests }: { counts: AudienceCounts; guests: Guest[] }) {
   const router = useRouter();
   const [audience, setAudience] = useState<Audience>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -23,7 +15,7 @@ export function ComposeUpdate({ counts, guests }: { counts: Record<"all" | "cele
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
-  const recipients = audience === "selected" ? selected.size : counts[audience];
+  const recipients = recipientCount(audience, selected, counts);
 
   function toggle(email: string) {
     setConfirming(false);
@@ -47,24 +39,7 @@ export function ComposeUpdate({ counts, guests }: { counts: Record<"all" | "cele
   }
 
   return <form className="adm-compose" onSubmit={(e) => { e.preventDefault(); setConfirming(true); }}>
-    <fieldset className="flo-fieldset">
-      <legend className="flo-caps adm-compose-legend">Send to</legend>
-      <div className="adm-audiences">
-        {AUDIENCES.map((option) => <label className="flo-option" key={option.value}>
-          <input type="radio" name="audience" value={option.value} checked={audience === option.value} onChange={() => { setAudience(option.value); setConfirming(false); }}/>
-          <span className="flo-dot" aria-hidden="true"/>
-          <span className="adm-audience-text">{option.label} <em>({option.value === "selected" ? selected.size : counts[option.value as "all" | "celebrating" | "from_afar"]})</em></span>
-        </label>)}
-      </div>
-    </fieldset>
-    {audience === "selected" && <fieldset className="flo-fieldset adm-guestlist">
-      <legend className="flo-caps adm-compose-legend">Guests</legend>
-      {guests.length === 0 && <p className="adm-hint" style={{ margin: 0 }}>No replies yet.</p>}
-      {guests.map((guest) => <label className="adm-guest" key={guest.email}>
-        <input type="checkbox" checked={selected.has(guest.email)} onChange={() => toggle(guest.email)}/>
-        <span>{guest.fullName}</span> <em>{guest.email}</em>
-      </label>)}
-    </fieldset>}
+    <AudiencePicker audience={audience} selected={selected} counts={counts} guests={guests} onAudience={(value) => { setAudience(value); setConfirming(false); }} onToggle={toggle}/>
     <div className="flo-field"><label className="flo-caps" htmlFor="update-subject">Subject</label><input className="flo-input" id="update-subject" value={subject} onChange={(e) => { setSubject(e.target.value); setConfirming(false); }} required maxLength={150}/></div>
     <div className="flo-field"><label className="flo-caps" htmlFor="update-body">Message</label><textarea className="flo-input flo-textarea" id="update-body" value={body} onChange={(e) => { setBody(e.target.value); setConfirming(false); }} rows={8} required maxLength={5000} placeholder="Blank lines start new paragraphs."/></div>
     {error && <p className="flo-error" role="alert">{error}</p>}
