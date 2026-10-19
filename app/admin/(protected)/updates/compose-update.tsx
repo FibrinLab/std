@@ -39,7 +39,7 @@ export function ComposeUpdate({ counts, guests }: { counts: AudienceCounts; gues
   }
 
   return <form className="adm-compose" onSubmit={(e) => { e.preventDefault(); setConfirming(true); }}>
-    <AudiencePicker audience={audience} selected={selected} counts={counts} guests={guests} onAudience={(value) => { setAudience(value); setConfirming(false); }} onToggle={toggle}/>
+    <AudiencePicker audience={audience} selected={selected} counts={counts} guests={guests} onAudience={(value) => { if (value !== "custom") setAudience(value); setConfirming(false); }} onToggle={toggle}/>
     <div className="flo-field"><label className="flo-caps" htmlFor="update-subject">Subject</label><input className="flo-input" id="update-subject" value={subject} onChange={(e) => { setSubject(e.target.value); setConfirming(false); }} required maxLength={150}/></div>
     <div className="flo-field"><label className="flo-caps" htmlFor="update-body">Message</label><textarea className="flo-input flo-textarea" id="update-body" value={body} onChange={(e) => { setBody(e.target.value); setConfirming(false); }} rows={8} required maxLength={5000} placeholder="Blank lines start new paragraphs."/></div>
     {error && <p className="flo-error" role="alert">{error}</p>}

@@ -8,8 +8,10 @@ import { isAdmin } from "@/lib/security";
 
 const schema = z.object({
   note: z.string().trim().max(2000).default(""),
-  audience: z.enum(["all", "celebrating", "from_afar", "selected"]).default("celebrating"),
+  audience: z.enum(["all", "celebrating", "from_afar", "selected", "custom"]).default("celebrating"),
   recipientEmails: z.array(z.email()).max(500).default([]),
+  // "custom": addresses typed on the admin page — anyone, replied or not.
+  customRecipients: z.array(z.object({ email: z.email(), fullName: z.string().trim().max(120).default("") })).max(500).default([]),
   // A test copy goes only to the couple's alert address and is not recorded as a sent update.
   test: z.boolean().default(false),
 });
@@ -18,11 +20,17 @@ export async function POST(request: Request) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Please check the note and audience." }, { status: 400 });
-  const { audience, recipientEmails, note, test } = parsed.data;
+  const { audience, recipientEmails, customRecipients, note, test } = parsed.data;
+  // The broadcasts table only knows the four list audiences, so typed addresses are filed under "selected".
+  const recordedAudience = audience === "custom" ? "selected" : audience;
 
   let recipients: Array<{ email: string; fullName: string }>;
   if (test) {
     recipients = [{ email: env.ADMIN_ALERT_EMAIL, fullName: "Test guest" }];
+  } else if (audience === "custom") {
+    const seen = new Set<string>();
+    recipients = customRecipients.map((r) => ({ email: r.email.toLowerCase(), fullName: r.fullName })).filter((r) => !seen.has(r.email) && seen.add(r.email));
+    if (recipients.length === 0) return NextResponse.json({ error: "Add at least one email address." }, { status: 400 });
   } else {
     recipients = await getRecipients(audience);
     if (audience === "selected") {
@@ -32,7 +40,7 @@ export async function POST(request: Request) {
     if (recipients.length === 0) return NextResponse.json({ error: audience === "selected" ? "Pick at least one guest." : "No guests match that audience yet." }, { status: 400 });
   }
 
-  const record = (sentCount: number) => saveBroadcast({ subject: itinerary.subject, body: note ? `Itinerary — ${note}` : "Itinerary", audience, sentCount });
+  const record = (sentCount: number) => saveBroadcast({ subject: itinerary.subject, body: note ? `Itinerary — ${note}` : "Itinerary", audience: recordedAudience, sentCount });
   try {
     if (!env.RESEND_API_KEY) {
       if (!isDemoMode) return NextResponse.json({ error: "RESEND_API_KEY is not configured, so emails cannot be sent." }, { status: 503 });
