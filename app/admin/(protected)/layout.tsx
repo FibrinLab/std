@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return <div className="adm-shell">
     <header className="adm-header">
       <Link href="/admin" className="adm-brand">D&thinsp;&amp;&thinsp;A <span className="flo-caps">— Save the date</span></Link>
-      <nav className="adm-nav flo-caps"><Link href="/admin">Replies</Link><Link href="/admin/guests">Guests</Link><Link href="/admin/updates">Send update</Link><Link href="/admin/itinerary">Itinerary</Link><Link href="/admin/assistant">Assistant</Link><Link href="/">View site</Link><SignOut/></nav>
+      <nav className="adm-nav flo-caps"><Link href="/admin">Replies</Link><Link href="/admin/guests">Guests</Link><Link href="/admin/gifts">Gifts</Link><Link href="/admin/updates">Send update</Link><Link href="/admin/itinerary">Itinerary</Link><Link href="/admin/assistant">Assistant</Link><Link href="/">View site</Link><SignOut/></nav>
     </header>
     {children}
   </div>;

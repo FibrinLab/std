@@ -50,3 +50,19 @@ export interface SaveTheDateInput {
   note: string;
   inviteId?: string | null;
 }
+
+export interface GiftClaim {
+  id: string;
+  giftId: string;
+  guestName: string;
+  email: string;
+  message: string;
+  createdAt: string;
+}
+
+export interface GiftClaimInput {
+  giftId: string;
+  guestName: string;
+  email: string;
+  message: string;
+}

@@ -31,6 +31,7 @@ if (!url || !key) {
     ["invites?select=id,code,plus_one&limit=1", "invites table", "0006_invites.sql"],
     ["save_the_date_rsvps?select=invite_id&limit=1", "invite_id column", "0006_invites.sql"],
     ["save_the_date_rsvps?select=phone&limit=1", "phone column", "0007_phone.sql"],
+    ["gift_claims?select=id,gift_id&limit=1", "gift_claims table", "0008_gift_claims.sql"],
   ];
   for (const [path, label, migration] of checks) {
     try {

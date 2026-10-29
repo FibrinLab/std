@@ -17,6 +17,7 @@ export const navLinks: Array<{ label: string; href: `#${string}` | `/${string}` 
   { label: "RSVP", href: "#rsvp" },
   { label: "Accommodation", href: "#stay" },
   { label: "Flights", href: "/flights" },
+  { label: "Gifts", href: "/gifts" },
   { label: "Details", href: "#details" },
 ];
 
@@ -28,8 +29,14 @@ export const detailSections: Array<{ heading: string; body: string; link?: { lab
     after: ".",
   },
   {
+    heading: "Gifts",
+    body: "Your presence is the only present we need — but if you’d like to mark the day, we’ve put together a small list on our",
+    link: { label: "Gifts page", href: "/gifts" },
+    after: ".",
+  },
+  {
     heading: "All the extras",
-    body: "Schedule, gift notes and more fun stuff will follow with the formal invitation. Until then, keep an eye on your inbox.",
+    body: "Schedule and more fun stuff will follow with the formal invitation. Until then, keep an eye on your inbox.",
   },
   {
     heading: "Questions?",
@@ -337,4 +344,81 @@ export const itinerary = {
     { title: "Questions", body: "Message us on WhatsApp at any time — we are happy to help with anything at all." },
   ],
   closing: "We cannot wait to see you there.",
+};
+
+// ---------- Gifts (/gifts) ----------
+// EXAMPLE LIST — the gifts, prices and categories below are placeholders in the right shape. Replace them with
+// the couple's own choices. How it works: the couple keeps a registry (Amazon Wedding Registry or a wish list
+// with "ship to registrant" on and the address hidden). Guests reserve a gift here so nobody buys the same
+// thing twice, then buy it through the registry, which delivers it to the couple without sharing the address.
+// Each gift's `href` is its link on Amazon (ideally the item inside the registry); leave it out and the button
+// opens the registry itself. `quantity` is how many of that gift are wanted (default 1). `image` is optional —
+// a product photo URL from Amazon (m.media-amazon.com) or a file in public/gifts/; cards without one show an
+// inked gift ornament instead. `id` is stored with each reservation, so keep ids stable once the page is live.
+
+export type Gift = {
+  id: string;
+  name: string;
+  note: string;
+  price: string;
+  category: string;
+  href?: string;
+  image?: { src: string; alt: string };
+  quantity?: number;
+};
+
+const giftItems: Gift[] = [
+  { id: "le-creuset-casserole", name: "Cast iron casserole dish", note: "For long Sunday stews and the jollof rice we keep promising everyone.", price: "£180", category: "Kitchen", quantity: 1 },
+  { id: "dinner-set", name: "Twelve-piece stoneware dinner set", note: "Our first proper set — for dinners with all of you when you visit.", price: "£95", category: "Dining", quantity: 1 },
+  { id: "stand-mixer", name: "Stand mixer", note: "Doyin has a list of cakes to bake. Akan has volunteered to taste.", price: "£350", category: "Kitchen", quantity: 1 },
+  { id: "bed-linen", name: "Egyptian cotton bed linen set", note: "Crisp white sheets for lazy mornings.", price: "£120", category: "Bedroom", quantity: 2 },
+  { id: "bath-towels", name: "Bath towel bundle", note: "Thick, soft, and finally matching.", price: "£60", category: "Bathroom", quantity: 2 },
+  { id: "coffee-machine", name: "Espresso machine", note: "For the early starts — and the guests who stay up late.", price: "£220", category: "Kitchen", quantity: 1 },
+  { id: "picture-frames", name: "Set of gallery picture frames", note: "A wall of wedding photos is already planned. We just need the frames.", price: "£45", category: "Living room", quantity: 1 },
+  { id: "knife-set", name: "Chef’s knife set with block", note: "A good knife set lasts a lifetime, which is the idea.", price: "£140", category: "Kitchen", quantity: 1 },
+  { id: "luggage", name: "Matching cabin suitcases", note: "For the honeymoon and every trip after it.", price: "£160", category: "Travel", quantity: 1 },
+];
+
+export const gifts = {
+  title: "Gifts",
+  eyebrow: "A note on gifts",
+  intro: "Having you with us in Lagos is truly the greatest gift. If you would also like to give something, we’ve put together a small list of things we’d love for our first home together.",
+  howItWorks: {
+    heading: "How it works",
+    steps: [
+      { title: "Pick a gift", body: "Browse the list below — everything on it is something we’ve chosen ourselves." },
+      { title: "Reserve it here", body: "Tap “Reserve” and leave your name so no one else buys the same thing. Only the two of us see who reserved what." },
+      { title: "Buy it on Amazon", body: "Buy through our Amazon registry and it is delivered straight to us — our address stays private, and Amazon marks it as bought." },
+    ],
+  },
+  registry: {
+    // Paste the registry's public link here when it exists. While it is empty the page says the link is coming soon.
+    href: "",
+    label: "Open our Amazon registry",
+    comingSoon: "Our Amazon registry link is on its way — reserve now and check back soon.",
+    buyLabel: "Buy on Amazon",
+    deliveryNote: "Gifts bought through the registry come straight to us — you never need our address, and Amazon marks the gift as bought so nobody doubles up.",
+  },
+  reserve: {
+    button: "Reserve this gift",
+    reserved: "Reserved",
+    left: (n: number) => (n === 1 ? "1 left" : `${n} left`),
+    dialogEyebrow: "Reserve a gift",
+    dialogIntro: "Leave your name so we can keep this one for you. We’ll never share it with other guests.",
+    nameLabel: "Your name",
+    emailLabel: "Email (optional, so we can say thank you)",
+    messageLabel: "A note for us (optional)",
+    submit: "Reserve",
+    thanksHeading: "It’s yours — thank you!",
+    thanksBody: "We’ve set this gift aside for you. The last step is to buy it on Amazon so it reaches us.",
+    privacy: "Your name and email are only ever seen by Doyin & Akan.",
+    busy: "Someone reserved this gift a moment ago — please pick another, with our thanks.",
+  },
+  contribution: {
+    heading: "Prefer to contribute instead?",
+    body: "If a gift from the list isn’t for you, a contribution towards our honeymoon would be just as treasured. Message us on WhatsApp and we’ll send the details.",
+    link: wedding.whatsapp,
+  },
+  closing: "Whatever you choose — or if you choose nothing at all — thank you for celebrating with us.",
+  items: giftItems,
 };

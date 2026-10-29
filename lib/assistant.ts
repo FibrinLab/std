@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { countdownLine, detailSections, flights, hotels, itinerary, stay, wedding } from "./content";
+import { countdownLine, detailSections, flights, gifts, hotels, itinerary, stay, wedding } from "./content";
 import { MAX_MESSAGE_CHARS, MAX_TURNS } from "./assistant-shared";
 import { env } from "./env";
 
@@ -83,6 +83,24 @@ function itinerarySection() {
   ]);
 }
 
+function giftsSection() {
+  return block([
+    gifts.intro,
+    "",
+    `## ${gifts.howItWorks.heading}`,
+    ...gifts.howItWorks.steps.map((step) => `- ${step.title}: ${step.body}`),
+    gifts.registry.href ? `Registry link: ${gifts.registry.href}` : "The Amazon registry link is not on the site yet; guests can reserve a gift now and buy it once the link appears.",
+    gifts.registry.deliveryNote,
+    "",
+    "## The list (whether each gift is still available changes — send guests to the Gifts page at /gifts to check and reserve)",
+    ...gifts.items.map((gift) => `- ${gift.name} (${gift.category}, ${gift.price}${(gift.quantity ?? 1) > 1 ? `, ${gift.quantity} wanted` : ""}): ${gift.note}`),
+    "",
+    `## ${gifts.contribution.heading}`,
+    gifts.contribution.body,
+    gifts.closing,
+  ]);
+}
+
 /** The system prompt, built from the site copy only. Stable across requests so the API can cache it. */
 export function buildSystemPrompt() {
   const details = detailSections.map((section) => `- ${section.heading}: ${section.body}${section.link ? ` ${section.link.label} (${section.link.href})` : ""}${section.after ?? ""}`);
@@ -90,7 +108,7 @@ export function buildSystemPrompt() {
     `You are the friendly assistant on ${wedding.coupleNames}'s wedding website. You help invited guests with questions about the wedding and about travelling to it.`,
     "",
     "## How to answer",
-    "- Answer only questions about this wedding, the venue, where to stay, and travel to Lagos. If a question is about anything else, say warmly that you can only help with the wedding and steer back.",
+    "- Answer only questions about this wedding, the venue, where to stay, travel to Lagos, and the gift list. If a question is about anything else, say warmly that you can only help with the wedding and steer back.",
     "- Be warm and brief: a few sentences, in plain prose. Write plain text only — no Markdown, no asterisks, no headings, and no bullet lists unless the guest asks for a list.",
     "- Use only the facts below. Never invent or guess times, dates, prices, addresses, phone numbers or links. If the facts below do not answer the question, say you are not sure and point the guest to the couple on WhatsApp.",
     `- The couple's WhatsApp is ${wedding.whatsapp.label} (${wedding.whatsapp.href}). That is where guests should go for anything you cannot answer, for RSVP changes, and for personal arrangements.`,
@@ -120,6 +138,9 @@ export function buildSystemPrompt() {
     "",
     `## ${itinerary.title} (DRAFT — ${TO_BE_CONFIRMED})`,
     itinerarySection(),
+    "",
+    `## ${gifts.title} (/gifts)`,
+    giftsSection(),
     "",
     `Sign off warmly when it fits, but never pretend to be the couple. ${wedding.signOff.replace("Love, ", "The couple are ")}.`,
   ]);
