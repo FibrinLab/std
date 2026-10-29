@@ -10,7 +10,7 @@
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "save-the-date" }],
   "images": { "binding": "IMAGES" },
   // Public, non-sensitive settings only — this file is in a public repo.
-  // Secrets (ADMIN_PASSWORD, RESEND_API_KEY, SUPABASE_SERVICE_ROLE_KEY) are set as encrypted
+  // Secrets (ADMIN_PASSWORD, RESEND_API_KEY, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY) are set as encrypted
   // Secrets in the Cloudflare dashboard, or with `npx wrangler secret put NAME`; deploys never touch them.
   "vars": {
     "DEMO_MODE": "false",
@@ -21,5 +21,13 @@
   },
   // Keep anything else set in the dashboard instead of wiping it on each deploy.
   "keep_vars": true,
+  // Guest chat assistant (/api/chat). ANTHROPIC_API_KEY is a dashboard Secret, never a var here.
+  // Rate limiting bindings count across every isolate, unlike the in-memory limiter the route falls back to.
+  // Cloudflare only offers 10- or 60-second windows, so these are per-minute ceilings; the route still keeps
+  // its own 20-per-10-minutes and 2000-per-day counters on top. namespace_id is any integer unique to this account.
+  "ratelimits": [
+    { "name": "CHAT_RATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "CHAT_GLOBAL_LIMIT", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }
+  ],
   "observability": { "enabled": true }
 }
