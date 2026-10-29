@@ -11,7 +11,7 @@ export default function AssistantPage() {
     <header className="adm-title">
       <div>
         <p className="flo-caps adm-eyebrow">Guest assistant</p>
-        <h1>Ask us.</h1>
+        <h1>Ask our AI.</h1>
         <p className="adm-sub">The chat button on the public site, answered by Claude ({ASSISTANT_MODEL}) using only what lib/content.ts says. Try it here before guests do.</p>
       </div>
       <span className={`adm-chip ${configured ? "confirmed" : "pending"}`}>{configured ? "API key configured" : "API key missing"}</span>
