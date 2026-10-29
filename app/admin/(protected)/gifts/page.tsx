@@ -1,5 +1,6 @@
 import { SprigDivider } from "@/components/floral-art";
 import { gifts } from "@/lib/content";
+import { env } from "@/lib/env";
 import { findGift, giftAvailability, giftQuantity } from "@/lib/gifts";
 import { listGiftClaims } from "@/lib/repository";
 import { ReleaseClaim } from "./release-claim";
@@ -34,7 +35,7 @@ export default async function GiftsAdminPage() {
     <section className="adm-panel">
       <SprigDivider className="adm-sprig"/>
       <h2 className="flo-caps adm-panel-title">Reservations</h2>
-      <p className="adm-hint">Newest first. Release a reservation if a guest changes their mind, and the gift opens up again on the site.</p>
+      <p className="adm-hint">Newest first — each new reservation is also emailed to {env.ADMIN_ALERT_EMAIL}. Release a reservation if a guest changes their mind, and the gift opens up again on the site.</p>
       <div className="table-scroll">
         <table className="adm-table">
           <thead><tr><th>Gift</th><th>Guest</th><th>Email</th><th>Note</th><th>Reserved</th><th></th></tr></thead>

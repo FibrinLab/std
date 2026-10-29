@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { gifts } from "@/lib/content";
+import { sendGiftAlertEmail } from "@/lib/email";
 import { availabilityFor, findGift, giftAvailability } from "@/lib/gifts";
 import { createWindowLimiter } from "@/lib/rate-limit";
 import { listGiftClaims, saveGiftClaim } from "@/lib/repository";
@@ -21,7 +22,10 @@ export async function POST(request: Request) {
     const claims = await listGiftClaims();
     if (availabilityFor(gift, claims).left === 0) return NextResponse.json({ error: gifts.reserve.busy, availability: giftAvailability(claims) }, { status: 409 });
     const claim = await saveGiftClaim(parsed.data);
-    return NextResponse.json({ ok: true, giftId: claim.giftId, availability: giftAvailability([...claims, claim]) });
+    const availability = giftAvailability([...claims, claim]);
+    // The couple hear about each reservation by email; after() runs once the response is sent and is kept alive by the runtime.
+    after(() => sendGiftAlertEmail(claim, gift, availability[gift.id]).catch((error) => console.error("Gift alert email failed", error)));
+    return NextResponse.json({ ok: true, giftId: claim.giftId, availability });
   } catch (error) {
     console.error("Gift reservation failed", error);
     return NextResponse.json({ error: "We could not save your reservation. Please try again." }, { status: 500 });

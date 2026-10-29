@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { gifts } from "@/lib/content";
 import { deleteDemoGiftClaim, listDemoGiftClaims, saveDemoGiftClaim } from "@/lib/demo-store";
 import { availabilityFor, buyHref, findGift, giftAvailability, giftQuantity } from "@/lib/gifts";
+import { renderGiftAlertEmail } from "@/lib/email";
 import { giftReserveSchema } from "@/lib/schemas";
 
 const claim = (giftId: string) => ({ giftId });
@@ -58,5 +59,24 @@ describe("demo gift claims", () => {
     expect(deleteDemoGiftClaim(saved.id)).toBe(true);
     expect(deleteDemoGiftClaim(saved.id)).toBe(false);
     expect(giftAvailability(listDemoGiftClaims())["stand-mixer"].left).toBe(1);
+  });
+});
+
+describe("renderGiftAlertEmail", () => {
+  const gift = { id: "bed-linen", name: "Egyptian cotton bed linen set", note: "", price: "£120", category: "Bedroom", quantity: 2 };
+  const claim = { id: "c1", giftId: "bed-linen", guestName: "Ada Eze", email: "ada@example.com", message: "With love from Abuja", createdAt: "2027-01-01T10:00:00.000Z" };
+  it("names the guest and the gift, quotes the note and says what is left", async () => {
+    const html = await renderGiftAlertEmail({ claim, gift, availability: { quantity: 2, claimed: 1, left: 1 } });
+    expect(html).toContain("Ada Eze reserved Egyptian cotton bed linen set");
+    expect(html).toContain("With love from Abuja");
+    expect(html).toContain("ada@example.com");
+    expect(html).toContain("1 of 2 still open");
+    expect(html).toContain("/admin/gifts");
+  });
+  it("copes without an email or note and says when a gift is fully reserved", async () => {
+    const html = await renderGiftAlertEmail({ claim: { ...claim, email: "", message: "" }, gift: { ...gift, quantity: 1 }, availability: { quantity: 1, claimed: 1, left: 0 } });
+    expect(html).toContain("did not leave an email");
+    expect(html).toContain("now marked as reserved");
+    expect(html).not.toContain("With love");
   });
 });
