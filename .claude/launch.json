@@ -2,6 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     { "name": "dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 },
+    { "name": "cf-preview", "runtimeExecutable": "npx", "runtimeArgs": ["wrangler", "dev", "--port", "8787"], "port": 8787 },
     { "name": "dev-demo-open-admin", "runtimeExecutable": "env", "runtimeArgs": ["ADMIN_PASSWORD=", "RESEND_API_KEY=", "DEMO_MODE=true", "npx", "next", "dev"], "port": 3000 }
   ]
 }

@@ -3,35 +3,53 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextResponse } from "next/server";
 import { ASSISTANT_MODEL, MAX_REPLY_TOKENS, WHATSAPP_FALLBACK_REPLY, buildSystemPrompt, chatRequestSchema, isAssistantConfigured } from "@/lib/assistant";
 import { env } from "@/lib/env";
+import { CHAT_LIMITS, durableObjectAllows, isChatLimiterNamespace } from "@/lib/chat-limiter";
 import { createDailyCap, createWindowLimiter, isCloudflareRateLimiter } from "@/lib/rate-limit";
 
 // Guest chat: the question goes to Claude with the site copy as its only knowledge, and the reply streams
 // back as plain text. Questions are never logged — only error types and counts.
 
-const perIp = createWindowLimiter({ limit: 20, windowMs: 10 * 60 * 1000 });
-const daily = createDailyCap(2000);
+// In-memory fallback for `next dev`, where there is no Durable Object. On Cloudflare these are per isolate.
+const perIp = createWindowLimiter(CHAT_LIMITS.perIp);
+const daily = createDailyCap(CHAT_LIMITS.perDay);
 const systemPrompt = buildSystemPrompt();
 const BUSY_REPLY = "Our assistant is a little busy right now — please try again in a few minutes, or message us on WhatsApp.";
 
 const clientIp = (request: Request) => request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
 
-// Cloudflare's rate limiting bindings count across every isolate; locally (next dev) there is no context, so skip.
-async function cloudflareAllows(ip: string) {
-  let bindings: Record<string, unknown>;
-  try { bindings = getCloudflareContext().env as unknown as Record<string, unknown>; } catch { return true; }
+// Locally (next dev) there is no Cloudflare context, so there are no bindings to ask.
+function cloudflareBindings(): Record<string, unknown> {
+  try { return getCloudflareContext().env as unknown as Record<string, unknown>; } catch { return {}; }
+}
+
+// Which limiter refused the request, named in an `x-limited-by` header on the 429 so the limits can be checked
+// from outside without any logging. Cloudflare's `ratelimits` bindings are a cheap first check, but they are
+// approximate (per location, eventually consistent); the ChatLimiter Durable Object is the exact count.
+type LimitedBy = "ratelimit-binding" | "durable-object" | "memory" | null;
+async function limitedBy(ip: string): Promise<LimitedBy> {
+  const bindings = cloudflareBindings();
   const checks = [[bindings.CHAT_RATE_LIMIT, ip], [bindings.CHAT_GLOBAL_LIMIT, "everyone"]] as const;
   for (const [limiter, key] of checks) {
     if (!isCloudflareRateLimiter(limiter)) continue;
     const { success } = await limiter.limit({ key });
-    if (!success) return false;
+    if (!success) return "ratelimit-binding";
   }
-  return true;
+  if (isChatLimiterNamespace(bindings.CHAT_LIMITER)) {
+    try {
+      return (await durableObjectAllows(bindings.CHAT_LIMITER, ip)) ? null : "durable-object";
+    } catch (error) {
+      // A limiter outage should not take the chat down with it: fall back to the in-memory counters below.
+      console.error("ChatLimiter unavailable:", error instanceof Error ? error.message : "unknown");
+    }
+  }
+  return perIp.allow(ip) && daily.allow("everyone") ? null : "memory";
 }
 
 export async function POST(request: Request) {
   if (!isAssistantConfigured()) return NextResponse.json({ error: "The assistant is not switched on yet. Please message us on WhatsApp instead." }, { status: 503 });
   const ip = clientIp(request);
-  if (!(await cloudflareAllows(ip)) || !perIp.allow(ip) || !daily.allow("everyone")) return NextResponse.json({ error: BUSY_REPLY }, { status: 429 });
+  const limited = await limitedBy(ip);
+  if (limited) return NextResponse.json({ error: BUSY_REPLY }, { status: 429, headers: { "x-limited-by": limited } });
   const parsed = chatRequestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Please keep each message under 1000 characters and start a fresh chat if this one has grown long." }, { status: 400 });
 
