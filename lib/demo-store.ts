@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { generateInviteCode } from "./invite-code";
-import type { Audience, Broadcast, Invite, InviteWithReply, SaveTheDateInput, SaveTheDateReply } from "./types";
+import type { Audience, Broadcast, GiftClaim, GiftClaimInput, Invite, InviteWithReply, SaveTheDateInput, SaveTheDateReply } from "./types";
 
 // Kept on globalThis so every route bundle sees the same store (Next.js dev compiles routes separately).
-const globalStore = globalThis as unknown as { __demoReplies?: SaveTheDateReply[]; __demoBroadcasts?: Broadcast[]; __demoInvites?: Invite[] };
+const globalStore = globalThis as unknown as { __demoReplies?: SaveTheDateReply[]; __demoBroadcasts?: Broadcast[]; __demoInvites?: Invite[]; __demoGiftClaims?: GiftClaim[] };
 const replies: SaveTheDateReply[] = (globalStore.__demoReplies ??= [
   { id: "40000000-0000-4000-8000-000000000001", inviteId: null, fullName: "Jordan Bennett", email: "jordan@example.com", phone: "+234 801 234 5678", status: "celebrating", approval: "pending", guestCount: 2, guestNames: ["Taylor Bennett"], note: "Wouldn't miss it for the world!", createdAt: "2026-07-01T10:00:00.000Z", updatedAt: "2026-07-01T10:00:00.000Z" },
   { id: "40000000-0000-4000-8000-000000000002", inviteId: null, fullName: "Amara Okafor", email: "amara@example.com", phone: "+44 7700 900123", status: "from_afar", approval: "pending", guestCount: 1, guestNames: [], note: "Sending all our love from London.", createdAt: "2026-07-03T18:30:00.000Z", updatedAt: "2026-07-03T18:30:00.000Z" },
@@ -74,4 +74,26 @@ export function confirmDemoReply(id: string): SaveTheDateReply | null {
   reply.approval = "confirmed";
   reply.updatedAt = new Date().toISOString();
   return structuredClone(reply);
+}
+
+// One reservation is seeded so the demo shows what a reserved gift looks like.
+const giftClaims: GiftClaim[] = (globalStore.__demoGiftClaims ??= [
+  { id: "50000000-0000-4000-8000-000000000001", giftId: "dinner-set", guestName: "Amara Okafor", email: "amara@example.com", message: "Can't wait to eat off these with you both!", createdAt: "2026-07-05T09:15:00.000Z" },
+]);
+
+export function listDemoGiftClaims(): GiftClaim[] {
+  return structuredClone(giftClaims).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function saveDemoGiftClaim(input: GiftClaimInput): GiftClaim {
+  const claim: GiftClaim = { id: randomUUID(), ...input, createdAt: new Date().toISOString() };
+  giftClaims.push(claim);
+  return structuredClone(claim);
+}
+
+export function deleteDemoGiftClaim(id: string): boolean {
+  const index = giftClaims.findIndex((claim) => claim.id === id);
+  if (index === -1) return false;
+  giftClaims.splice(index, 1);
+  return true;
 }

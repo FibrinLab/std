@@ -1,8 +1,8 @@
-import { confirmDemoReply, createDemoInvite, deleteDemoInvite, findDemoInviteByCode, getDemoBroadcasts, getDemoReplies, listDemoInvites, saveDemoBroadcast, saveDemoReply } from "./demo-store";
+import { confirmDemoReply, createDemoInvite, deleteDemoGiftClaim, deleteDemoInvite, findDemoInviteByCode, getDemoBroadcasts, getDemoReplies, listDemoGiftClaims, listDemoInvites, saveDemoBroadcast, saveDemoGiftClaim, saveDemoReply } from "./demo-store";
 import { isDemoMode } from "./env";
 import { generateInviteCode } from "./invite-code";
 import { createSupabaseAdminClient } from "./supabase/server";
-import type { Audience, Broadcast, Invite, InviteWithReply, SaveTheDateInput, SaveTheDateReply } from "./types";
+import type { Audience, Broadcast, GiftClaim, GiftClaimInput, Invite, InviteWithReply, SaveTheDateInput, SaveTheDateReply } from "./types";
 
 function mapReply(row: Record<string, unknown>): SaveTheDateReply {
   return { id: String(row.id), inviteId: row.invite_id ? String(row.invite_id) : null, fullName: String(row.full_name), email: String(row.email), phone: String(row.phone ?? ""), status: row.status as SaveTheDateReply["status"], approval: (row.approval as SaveTheDateReply["approval"]) ?? "pending", guestCount: Number(row.guest_count), guestNames: Array.isArray(row.guest_names) ? row.guest_names.map(String) : [], note: String(row.note ?? ""), createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
@@ -102,4 +102,33 @@ export async function listBroadcasts(): Promise<Broadcast[]> {
   if (!db) return [];
   const { data } = await db.from("broadcasts").select("*").order("created_at", { ascending: false });
   return (data ?? []).map((row) => ({ id: String(row.id), subject: String(row.subject), body: String(row.body), audience: row.audience as Audience, sentCount: Number(row.sent_count), createdAt: String(row.created_at) }));
+}
+
+// ---------- Gift reservations (/gifts) ----------
+
+const mapGiftClaim = (row: Record<string, unknown>): GiftClaim => ({ id: String(row.id), giftId: String(row.gift_id), guestName: String(row.guest_name), email: String(row.email ?? ""), message: String(row.message ?? ""), createdAt: String(row.created_at) });
+
+export async function listGiftClaims(): Promise<GiftClaim[]> {
+  if (isDemoMode) return listDemoGiftClaims();
+  const db = createSupabaseAdminClient();
+  if (!db) return [];
+  const { data } = await db.from("gift_claims").select("*").order("created_at", { ascending: false });
+  return (data ?? []).map(mapGiftClaim);
+}
+
+export async function saveGiftClaim(input: GiftClaimInput): Promise<GiftClaim> {
+  if (isDemoMode) return saveDemoGiftClaim(input);
+  const db = createSupabaseAdminClient();
+  if (!db) throw new Error("Database unavailable");
+  const { data, error } = await db.from("gift_claims").insert({ gift_id: input.giftId, guest_name: input.guestName, email: input.email, message: input.message }).select().single();
+  if (error || !data) throw error ?? new Error("Reservation not saved");
+  return mapGiftClaim(data);
+}
+
+export async function deleteGiftClaim(id: string): Promise<boolean> {
+  if (isDemoMode) return deleteDemoGiftClaim(id);
+  const db = createSupabaseAdminClient();
+  if (!db) return false;
+  const { error, count } = await db.from("gift_claims").delete({ count: "exact" }).eq("id", id);
+  return !error && (count ?? 0) > 0;
 }

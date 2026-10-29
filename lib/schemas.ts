@@ -22,3 +22,12 @@ export const saveTheDateSchema = z
   });
 
 export type SaveTheDateFormInput = z.infer<typeof saveTheDateSchema>;
+
+/** A guest reserving a gift on /gifts. The gift id is checked against lib/content.ts by the route. */
+export const giftReserveSchema = z.object({
+  giftId: z.string().trim().min(1).max(80),
+  guestName: z.string().trim().min(2).max(120),
+  email: z.union([z.literal(""), z.email().max(254).transform((value) => value.toLowerCase())]).default(""),
+  message: z.string().trim().max(300).default(""),
+});
+export type GiftReserveInput = z.infer<typeof giftReserveSchema>;
