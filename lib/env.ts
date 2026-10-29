@@ -9,6 +9,8 @@ const schema = z.object({
   ADMIN_PASSWORD: z.preprocess((v) => (v === "" ? undefined : v), z.string().min(8).optional()),
   ADMIN_ALERT_EMAIL: z.string().email().default("planner@example.com"),
   DEMO_MODE: z.enum(["true", "false"]).default("true"),
+  // Claude API key for the guest chat assistant. Blank means the assistant is switched off (the chat route answers 503).
+  ANTHROPIC_API_KEY: z.preprocess((v) => (v === "" ? undefined : v), z.string().optional()),
 });
 
 export const env = schema.parse(process.env);

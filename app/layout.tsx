@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ChatMount } from "@/components/chat-mount";
 import { Cormorant_Garamond, Instrument_Sans } from "next/font/google";
 import { wedding } from "@/lib/content";
 import "./globals.css";
@@ -13,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" data-scroll-behavior="smooth"><body className={`${display.variable} ${sans.variable}`}>{children}</body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><body className={`${display.variable} ${sans.variable}`}>{children}<ChatMount/></body></html>;
 }
