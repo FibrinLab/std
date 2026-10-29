@@ -344,9 +344,22 @@ img { max-width:100%; }
 /* ---------- Ask us — guest chat ---------- */
 .flo-visually-hidden { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 .flo-chat { position:fixed; right:max(18px,env(safe-area-inset-right)); bottom:max(18px,env(safe-area-inset-bottom)); z-index:20; font-family:var(--font-cormorant),serif; color:var(--ink); text-align:left; }
-.flo-chat-fab { width:74px; height:74px; border-radius:50%; border:1px solid var(--burgundy); background:#f8f4eaf0; color:var(--burgundy); font-family:var(--font-cormorant),serif; font-size:.72rem; font-weight:600; letter-spacing:.2em; text-indent:.2em; text-transform:uppercase; line-height:1.3; padding:0; cursor:pointer; box-shadow:0 14px 30px -16px #5d2e2680; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); transition:background-color .25s ease,color .25s ease,transform .25s ease; }
-.flo-chat-fab:hover { background:var(--burgundy); color:var(--ivory); transform:translateY(-2px); }
+.flo-chat-fab { position:relative; display:flex; align-items:center; gap:11px; min-height:60px; padding:9px 22px 9px 16px; border-radius:999px; border:1px solid #6d2a37; background:var(--burgundy); color:var(--ivory); font-family:var(--font-cormorant),serif; text-align:left; cursor:pointer; box-shadow:0 16px 34px -14px #5d2e26b3,0 0 0 4px #f8f4eacc; transition:background-color .25s ease,transform .25s ease,box-shadow .25s ease; }
+.flo-chat-fab:hover { background:#7a3140; transform:translateY(-2px); box-shadow:0 20px 38px -14px #5d2e26cc,0 0 0 4px #f8f4eacc; }
 .flo-chat-fab:focus-visible { outline:2px solid var(--burgundy); outline-offset:4px; }
+.flo-chat-fab.is-nudging::before { content:""; position:absolute; inset:-4px; border-radius:999px; border:1px solid var(--burgundy); animation:flo-chat-ring 2.2s ease-out infinite; pointer-events:none; }
+.flo-chat-spark { flex:none; color:#e8c98e; }
+.flo-chat-fab-text { display:grid; gap:1px; line-height:1.15; }
+.flo-chat-fab-label { font-size:.74rem; letter-spacing:.2em; text-indent:0; font-weight:600; }
+.flo-chat-fab-sub { font-size:.98rem; font-style:italic; color:#f8f4eacc; }
+.flo-chat-nudge { position:absolute; right:0; bottom:calc(100% + 14px); display:flex; align-items:flex-start; gap:4px; width:max-content; max-width:min(300px,calc(100vw - 48px)); padding:12px 8px 12px 16px; border:1px solid var(--hairline); background:#fffdf7; color:var(--ink); box-shadow:0 20px 40px -18px #5d2e2680; animation:flo-chat-rise .4s ease both; }
+.flo-chat-nudge::after { content:""; position:absolute; right:34px; bottom:-7px; width:12px; height:12px; border-right:1px solid var(--hairline); border-bottom:1px solid var(--hairline); background:#fffdf7; transform:rotate(45deg); }
+.flo-chat-nudge-text { background:none; border:0; padding:0; font:inherit; font-size:1.02rem; line-height:1.4; font-style:italic; color:var(--ink); text-align:left; cursor:pointer; }
+.flo-chat-nudge-text:hover { color:var(--burgundy); }
+.flo-chat-nudge-close { flex:none; width:26px; height:26px; margin:-4px -2px 0 0; border:0; border-radius:50%; background:none; color:var(--sand); font-size:1.2rem; line-height:1; cursor:pointer; }
+.flo-chat-nudge-close:hover { color:var(--burgundy); }
+.flo-chat-eyebrow .flo-chat-spark { width:12px; height:12px; margin:0 5px -1px 0; color:var(--gold); }
+@keyframes flo-chat-ring { 0% { transform:scale(1); opacity:.7; } 100% { transform:scale(1.35); opacity:0; } }
 .flo-chat-panel { display:flex; flex-direction:column; width:min(380px,calc(100vw - 36px)); height:min(560px,calc(100vh - 36px)); height:min(560px,calc(100dvh - 36px)); border:1px solid var(--hairline); background:#fdfaf2; background-image:radial-gradient(420px 260px at 100% 0%,#f2b8ac33,transparent 70%),var(--grain); box-shadow:0 30px 60px -30px #5d2e2680; animation:flo-chat-rise .35s ease both; }
 .flo-chat-inline { width:100%; max-width:none; height:min(640px,78vh); animation:none; }
 .flo-chat-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:16px 18px 12px; border-bottom:1px solid var(--hairline); }
@@ -382,13 +395,17 @@ img { max-width:100%; }
 @keyframes flo-chat-pulse { 0%,100% { opacity:.25; transform:translateY(0); } 50% { opacity:.9; transform:translateY(-2px); } }
 @media (max-width:540px) {
   .flo-chat { right:0; bottom:0; }
-  .flo-chat-fab { margin:0 14px max(14px,env(safe-area-inset-bottom)) 0; width:64px; height:64px; font-size:.62rem; }
+  .flo-chat-fab { margin:0 14px max(14px,env(safe-area-inset-bottom)) 0; min-height:54px; padding:7px 18px 7px 14px; gap:9px; }
+  .flo-chat-fab-label { font-size:.66rem; letter-spacing:.16em; }
+  .flo-chat-fab-sub { font-size:.9rem; }
+  .flo-chat-nudge { right:14px; bottom:calc(100% + 10px); }
   .flo-chat-panel { width:100vw; height:min(86vh,100vh); height:min(86dvh,100dvh); border-left:0; border-right:0; border-bottom:0; }
   .flo-chat-log { font-size:1rem; }
   .flo-chat-msg { max-width:92%; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .flo-chat-panel { animation:none; }
+  .flo-chat-panel, .flo-chat-nudge { animation:none; }
+  .flo-chat-fab.is-nudging::before { animation:none; display:none; }
   .flo-chat-dots i { animation:none; opacity:.7; }
   .flo-chat-fab:hover { transform:none; }
 }
